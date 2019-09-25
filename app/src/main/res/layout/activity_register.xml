@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:gravity="center"
+    tools:context=".view.register.RegisterActivity">
+
+    <EditText
+        style="@style/customfontstyle"
+        android:fontFamily="@font/jareeda"
+        android:hint="Enter FullName"
+        android:id="@+id/edit_full_name"
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        style="@style/customfontstyle"
+        android:fontFamily="@font/jareeda"
+        android:inputType="number"
+        android:hint="Enter Phone"
+        android:id="@+id/edit_phone"
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <EditText
+        style="@style/customfontstyle"
+        android:fontFamily="@font/jareeda"
+        android:inputType="textPassword"
+        android:hint="Enter Password"
+        android:id="@+id/edit_password"
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        style="@style/customfontstyle"
+        android:fontFamily="@font/jareeda"
+        android:inputType="textPassword"
+        android:hint="Enter Confirm Password"
+        android:id="@+id/edit_confirm_password"
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ProgressBar
+        android:visibility="invisible"
+        android:layout_margin="5dp"
+        android:id="@+id/progress_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        style="@style/customfontstyle"
+        android:fontFamily="@font/jareeda"
+        android:text="Register"
+        android:id="@+id/button_register"
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+
+
+
+
+</LinearLayout>

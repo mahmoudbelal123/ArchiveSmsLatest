@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_margin="1dp"
+    android:layoutDirection="locale"
+    android:textDirection="locale"
+    android:layout_height="wrap_content">
+
+
+    <android.support.v7.widget.CardView
+        android:background="#fff"
+        app:cardElevation="5dp"
+        app:cardMaxElevation="5dp"
+        android:layout_margin="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <LinearLayout
+            android:layoutDirection="locale"
+            android:textDirection="locale"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_margin="5dp"
+                android:layoutDirection="locale"
+                android:textDirection="locale"
+                android:layout_weight="7"
+                android:layout_gravity="center"
+                android:background="@drawable/sender_icon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        <TextView
+            android:layoutDirection="locale"
+            android:textDirection="locale"
+            android:layout_weight="3"
+            style="@style/customfontstyle"
+            android:fontFamily="@font/jareeda"
+            android:id="@+id/text_sender_name"
+            android:layout_margin="10dp"
+            android:gravity="start|center"
+            android:text="texttxtxtxttx"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+            <ImageView
+            android:id="@+id/image_delete_all_sender"
+            android:layout_margin="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="7.2"
+            android:background="@drawable/delete"
+            android:layoutDirection="locale"
+            android:textDirection="locale" />
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
