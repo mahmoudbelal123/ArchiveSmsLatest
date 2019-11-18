@@ -26,8 +26,8 @@ public interface ApiInterface {
     @POST(EndPoints.LOGIN)
     Observable<LoginResponse> loginObservable(@Body LoginRequest loginRequest);
 
-    @GET(EndPoints.CONFIRM_MESSAGE_DELIVERY)
-    Call<ConfirmMessageDeliveryResponse> confirmMessageDelivery(@Header("Authorization") String token , @Query("confirmed_ids") List<Integer> list);
+    @POST(EndPoints.CONFIRM_MESSAGE_DELIVERY)
+    Call<ConfirmMessageDeliveryResponse> confirmMessageDelivery(@Header("Authorization") String token , @Body ConfirmMessageRequest list);
 
 
 

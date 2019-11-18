@@ -31,7 +31,7 @@ public class GetNotificationsService extends JobService {
             list.add(arr[i]);
         }
 
-        connectWithServer(list);
+        //connectWithServer(list);
        // Toast.makeText(this, "started  . . .  . . .", Toast.LENGTH_SHORT).show();
         return false;
     }
@@ -44,58 +44,58 @@ public class GetNotificationsService extends JobService {
     }
 
 
-    private  void connectWithServer(List<String> messageIdsList)
-    {
-
-      try {
-          apiInterface = ApiClient.getClient().create(ApiInterface.class);
-          List<Integer> list = new ArrayList<>();
-
-          for (int i = 0; i < messageIdsList.size(); i++) {
-              list.add(Integer.parseInt(messageIdsList.get(i)));
-          }
-
-
-          LoginResponse loginResponse = Utilities.retrieveUserInfo(this);
-          String token = "Bearer " + loginResponse.getAccess_token();
-          Call<ConfirmMessageDeliveryResponse> call1 = apiInterface.confirmMessageDelivery(token, list);
-          call1.enqueue(new Callback<ConfirmMessageDeliveryResponse>() {
-              @Override
-              public void onResponse(Call<ConfirmMessageDeliveryResponse> call, Response<ConfirmMessageDeliveryResponse> response) {
-                  response.body();
-
-
-                  if (response.code() == 200) {
-                      for (int i = 0; i < response.body().getNot_send_messages().size(); i++) {
-                          saveNotificationToLocalDatabase("" + response.body().getNot_send_messages().get(i).getNotification_id(),
-                                  response.body().getNot_send_messages().get(i).getTitle()
-                                  , response.body().getNot_send_messages().get(i).getSender_name(),
-                                  response.body().getNot_send_messages().get(i).getTitle()
-                                  , response.body().getNot_send_messages().get(i).getContent());
-                      }
-                  }
-                  else {
-
-                  }
-
-
-              }
-
-              @Override
-
-              public void onFailure(Call<ConfirmMessageDeliveryResponse> call, Throwable t) {
-
-                  call.cancel();
-
-
-              }
-          });
-
-      }catch (Exception e)
-      {
-
-      }
-    }
+//    private  void connectWithServer(List<String> messageIdsList)
+//    {
+//
+//      try {
+//          apiInterface = ApiClient.getClient().create(ApiInterface.class);
+//          List<Integer> list = new ArrayList<>();
+//
+//          for (int i = 0; i < messageIdsList.size(); i++) {
+//              list.add(Integer.parseInt(messageIdsList.get(i)));
+//          }
+//
+//
+//          LoginResponse loginResponse = Utilities.retrieveUserInfo(this);
+//          String token = "Bearer " + loginResponse.getAccess_token();
+//          Call<ConfirmMessageDeliveryResponse> call1 = apiInterface.confirmMessageDelivery(token, list);
+//          call1.enqueue(new Callback<ConfirmMessageDeliveryResponse>() {
+//              @Override
+//              public void onResponse(Call<ConfirmMessageDeliveryResponse> call, Response<ConfirmMessageDeliveryResponse> response) {
+//                  response.body();
+//
+//
+//                  if (response.code() == 200) {
+//                      for (int i = 0; i < response.body().getNot_send_messages().size(); i++) {
+//                          saveNotificationToLocalDatabase("" + response.body().getNot_send_messages().get(i).getNotification_id(),
+//                                  response.body().getNot_send_messages().get(i).getTitle()
+//                                  , response.body().getNot_send_messages().get(i).getSender_name(),
+//                                  response.body().getNot_send_messages().get(i).getTitle()
+//                                  , response.body().getNot_send_messages().get(i).getContent());
+//                      }
+//                  }
+//                  else {
+//
+//                  }
+//
+//
+//              }
+//
+//              @Override
+//
+//              public void onFailure(Call<ConfirmMessageDeliveryResponse> call, Throwable t) {
+//
+//                  call.cancel();
+//
+//
+//              }
+//          });
+//
+//      }catch (Exception e)
+//      {
+//
+//      }
+//    }
 
 
     private  void saveNotificationToLocalDatabase(String notificationId , String time , String senderName, String title, String content)

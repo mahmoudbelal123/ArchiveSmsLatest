@@ -32,7 +32,18 @@ public class ConfirmMessageDeliveryResponse {
        @SerializedName("title")
        private String title;
 
-     @SerializedName("sender_name")
+       @SerializedName("time")
+       private String time;
+
+       public String getTime() {
+           return time;
+       }
+
+       public void setTime(String time) {
+           this.time = time;
+       }
+
+       @SerializedName("sender_name")
        private String sender_name;
 
 

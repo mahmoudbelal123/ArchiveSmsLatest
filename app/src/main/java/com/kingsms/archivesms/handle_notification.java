@@ -40,6 +40,8 @@ public class handle_notification extends FirebaseMessagingService {
         String content = (String) map.get("content");
 
         MyNotificationManager mNotificationManager = new MyNotificationManager(getBaseContext());
+          if(time == null)
+             time = "00:00";
         mNotificationManager.showNewNotification(notificationId ,time ,sender_name ,  title , content);
     }
 

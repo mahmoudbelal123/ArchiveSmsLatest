@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.kingsms.archivesms.R;
 import com.kingsms.archivesms.adapters.NotificationsAdapter;
+import com.kingsms.archivesms.helper.OnItemClickListener;
 import com.kingsms.archivesms.local_db.MyDatabaseAdapter;
 import com.kingsms.archivesms.model.NotificationModel;
 
@@ -22,7 +23,7 @@ public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
 
 
     RecyclerView recyclerViewNotifications;
-
+    NotificationsAdapter notificationsAdapter ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,10 +42,31 @@ public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
 
         if(getIntent().getStringExtra("sender_name") != null) {
             getAllNotificationsOfSenderName(getIntent().getStringExtra("sender_name"));
-            NotificationsAdapter notificationsAdapter = new NotificationsAdapter(notificationModelList , this);
+             notificationsAdapter = new NotificationsAdapter(notificationModelList, this, new OnItemClickListener() {
+                @Override
+                public void onItemClick(String item) {
+                    deleteOneNotificationById(item);
+                }
+            });
             recyclerViewNotifications.setAdapter(notificationsAdapter);
         }
     }
+
+    private void deleteOneNotificationById(String notificationId){
+        MyDatabaseAdapter myDatabaseAdapter = new MyDatabaseAdapter(this);
+        myDatabaseAdapter.open();
+         boolean isDeleted =   myDatabaseAdapter.deleteSpecificNotificationById(notificationId);
+        getAllNotificationsOfSenderName(getIntent().getStringExtra("sender_name"));
+
+        notificationsAdapter = new NotificationsAdapter(notificationModelList, this, new OnItemClickListener() {
+            @Override
+            public void onItemClick(String item) {
+                deleteOneNotificationById(item);
+            }
+        });
+        recyclerViewNotifications.setAdapter(notificationsAdapter);
+    }
+
 
     private void getAllNotificationsOfSenderName(String senderName)
     {
@@ -70,7 +92,7 @@ public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
         notificationModel.setTitle(c.getString(1));
         notificationModel.setTime(c.getString(2));
         notificationModel.setContent(c.getString(3));
-
+        notificationModel.setNotificationId(c.getString(4));
         notificationModelList.add(notificationModel);
     }
 

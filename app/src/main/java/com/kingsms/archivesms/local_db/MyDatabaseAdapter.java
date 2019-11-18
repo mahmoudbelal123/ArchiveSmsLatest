@@ -110,13 +110,20 @@ public class MyDatabaseAdapter {
     }
 
 
-    //---deletes a particular Trip---
-    public boolean deleteContact(long rowId)
+    public boolean deleteSpecificNotificationById(String rowId)
     {
-        return db.delete(DATABASE_TABLE_OF_NOTIFICATION_ALL, KEY_ROWID + "=" + rowId, null) > 0;
+        return db.delete(DATABASE_TABLE_OF_NOTIFICATION_ALL,  "notification_id = "+rowId, null) > 0;
     }
 
+    public boolean deleteSenderNameOfAll(String senderName)
+    {
+        return db.delete(DATABASE_TABLE_OF_NOTIFICATION_ALL,  "sender_name"+"='"+senderName+"'", null) > 0;
+    }
 
+    public boolean deleteSenderName(String senderName)
+    {
+        return db.delete(DATABASE_TABLE_OF_SENDER_NAMES,  "sender_name"+"='"+senderName+"'", null) > 0;
+    }
 
     //---retrieves all the UpComing Trips---
     public Cursor getAllSenderNames()
@@ -126,7 +133,7 @@ public class MyDatabaseAdapter {
 
     public Cursor getNotificationsBySenderName(String sender_name)
     {
-        return db.query(DATABASE_TABLE_OF_NOTIFICATION_ALL, new String[]{KEY_ROWID, "title" , "time" , "content" }, "sender_name" + "='"+sender_name+"'", null, null, null, null, null);
+        return db.query(DATABASE_TABLE_OF_NOTIFICATION_ALL, new String[]{KEY_ROWID, "title" , "time" , "content","notification_id" }, "sender_name" + "='"+sender_name+"'", null, null, null, null, null);
     }
     public Cursor getAllNotificationIds()
     {

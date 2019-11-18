@@ -1,6 +1,7 @@
 package com.kingsms.archivesms.adapters;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kingsms.archivesms.R;
+import com.kingsms.archivesms.helper.OnItemClickDeleteHomeListener;
 import com.kingsms.archivesms.helper.OnItemClickListener;
 
 import java.util.List;
@@ -18,22 +20,26 @@ public class SenderNamesAdapter extends RecyclerView.Adapter<SenderNamesAdapter.
     private List<String> senderNamesList;
     Context mContext;
     OnItemClickListener onItemClickListener ;
+    OnItemClickDeleteHomeListener onItemClickDeleteHomeListener ;
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView txtSenderName;
+        public ImageView deleteAllNotificationsImage;
 
         public MyViewHolder(View view) {
             super(view);
             txtSenderName = (TextView) view.findViewById(R.id.text_sender_name);
+            deleteAllNotificationsImage = view.findViewById(R.id.image_delete_all_sender);
 
         }
     }
 
-    public SenderNamesAdapter(List<String> senderNamesList, Context context , OnItemClickListener onItemClickListener ) {
+    public SenderNamesAdapter(List<String> senderNamesList, Context context , OnItemClickListener onItemClickListener,OnItemClickDeleteHomeListener onItemClickDeleteHomeListener ) {
         this.senderNamesList = senderNamesList;
         this.mContext = context ;
         this.onItemClickListener = onItemClickListener;
+        this.onItemClickDeleteHomeListener = onItemClickDeleteHomeListener;
     }
 
     @Override
@@ -53,6 +59,14 @@ public class SenderNamesAdapter extends RecyclerView.Adapter<SenderNamesAdapter.
                 onItemClickListener.onItemClick(senderNamesList.get(position).toString());
             }
         });
+
+        holder.deleteAllNotificationsImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickDeleteHomeListener.onItemClick(senderNamesList.get(position));
+            }
+        });
+
 
     }
 
