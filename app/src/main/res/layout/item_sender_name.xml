@@ -15,14 +15,14 @@
         app:cardMaxElevation="5dp"
         android:layout_margin="8dp"
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layoutDirection="locale"
             android:textDirection="locale"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
             <ImageView
                 android:layout_margin="5dp"
                 android:layoutDirection="locale"
@@ -31,7 +31,7 @@
                 android:layout_gravity="center"
                 android:background="@drawable/sender_icon"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content" />
         <TextView
             android:layoutDirection="locale"
             android:textDirection="locale"
@@ -43,13 +43,13 @@
             android:gravity="start|center"
             android:text="texttxtxtxttx"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
 
             <ImageView
             android:id="@+id/image_delete_all_sender"
             android:layout_margin="12dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="7.2"
             android:background="@drawable/delete"

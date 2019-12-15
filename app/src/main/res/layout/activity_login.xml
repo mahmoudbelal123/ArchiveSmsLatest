@@ -12,7 +12,7 @@
     <EditText
         style="@style/customfontstyle"
         android:fontFamily="@font/jareeda"
-        android:inputType="number"
+        android:inputType="text"
         android:hint="Enter Phone"
         android:id="@+id/edit_phone_login"
         android:layout_margin="20dp"

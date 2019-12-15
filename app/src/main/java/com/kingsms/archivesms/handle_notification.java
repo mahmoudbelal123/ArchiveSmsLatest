@@ -2,6 +2,7 @@ package com.kingsms.archivesms;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.kingsms.archivesms.view.HomeActivity.HomeSenderNamesActivity;
 
 import java.util.Map;
 
@@ -13,6 +14,7 @@ public class handle_notification extends FirebaseMessagingService {
             try {
                 Map<String , String> map =  remoteMessage.getData();
                 sendPushNotification(map);
+
 
             } catch (Exception e) {
 
@@ -43,6 +45,8 @@ public class handle_notification extends FirebaseMessagingService {
           if(time == null)
              time = "00:00";
         mNotificationManager.showNewNotification(notificationId ,time ,sender_name ,  title , content);
+
+
     }
 
 

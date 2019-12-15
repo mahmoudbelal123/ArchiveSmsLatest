@@ -63,7 +63,7 @@ public class MyNotificationManager {
         PendingIntent pendingIntent = PendingIntent.getActivity(mCtx, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         String channelId = "Default";
         NotificationCompat.Builder builder = new  NotificationCompat.Builder(mCtx, channelId)
-                .setSmallIcon(R.drawable.logo)
+                .setSmallIcon(R.drawable.sms_logo)
                 .setContentTitle(title)
                 .setContentText(content).setAutoCancel(true).setContentIntent(pendingIntent);;
         NotificationManager manager = (NotificationManager) mCtx.getSystemService(NOTIFICATION_SERVICE);
@@ -76,6 +76,7 @@ public class MyNotificationManager {
         manager.notify(0, builder.build());
         saveNotificationToLocalDatabase(notificationId,time,senderName,title,content);
 
+
     }
 
 
@@ -87,26 +88,31 @@ public class MyNotificationManager {
         long idSenderNamesInserted = db.insertSenderNames(senderName);
 
         if (id > -1) {
-            Toast.makeText(mCtx, "Notification All Content Inserted Done ", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(mCtx, "Notification All Content Inserted Done ", Toast.LENGTH_SHORT).show();
             //TODO send Request to change the status on the server side - by using notification_id -
 
 
         } else {
 
-            Toast.makeText(mCtx, "Notification All Content Not Inserted", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(mCtx, "Notification All Content Not Inserted", Toast.LENGTH_SHORT).show();
         }
         if (idSenderNamesInserted > -1) {
-            Toast.makeText(mCtx, "Sender Name Inserted Done ", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(mCtx, "Sender Name Inserted Done ", Toast.LENGTH_SHORT).show();
             //TODO send Request to change the status on the server side - by using notification_id -
 
 
         } else {
 
-            Toast.makeText(mCtx, "Sender Name Not Inserted", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(mCtx, "Sender Name Not Inserted", Toast.LENGTH_SHORT).show();
         }
+
+        Intent intent = new Intent(mCtx, HomeSenderNamesActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        mCtx.startActivity(intent);
 
 
     }
+
 
 }
 

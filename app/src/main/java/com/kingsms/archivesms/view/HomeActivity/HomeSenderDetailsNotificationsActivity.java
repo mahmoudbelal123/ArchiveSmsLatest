@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
 
 import com.kingsms.archivesms.R;
 import com.kingsms.archivesms.adapters.NotificationsAdapter;
@@ -24,12 +26,14 @@ public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
 
     RecyclerView recyclerViewNotifications;
     NotificationsAdapter notificationsAdapter ;
+    TextView txtNotFound;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_sender_details_notifications);
 
 
+        txtNotFound = findViewById(R.id.text_not_found);
         recyclerViewNotifications = findViewById(R.id.recycle_notifications_details);
 
         notificationModel  = new NotificationModel();
@@ -37,6 +41,7 @@ public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
 
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+
         recyclerViewNotifications.setLayoutManager(mLayoutManager);
         recyclerViewNotifications.setItemAnimator(new DefaultItemAnimator());
 
@@ -49,6 +54,17 @@ public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
                 }
             });
             recyclerViewNotifications.setAdapter(notificationsAdapter);
+        }
+
+        if(notificationModelList.size() == 0)
+        {
+            txtNotFound.setVisibility(View.VISIBLE);
+
+        }
+        else
+        {
+            txtNotFound.setVisibility(View.GONE);
+
         }
     }
 
@@ -70,13 +86,14 @@ public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
 
     private void getAllNotificationsOfSenderName(String senderName)
     {
+        notificationModelList = new ArrayList<>();
+
         MyDatabaseAdapter db = new MyDatabaseAdapter(this);
         db.open();
         Cursor c = db.getNotificationsBySenderName(senderName);
 
-        if (c.moveToFirst()) {
+        if (c.moveToNext()) {
 //            notificationModel  = new NotificationModel();
-            notificationModelList = new ArrayList<>();
 
             do {
                 addToNotificationList(c);

@@ -13,8 +13,10 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kingsms.archivesms.R;
@@ -23,6 +25,7 @@ import com.kingsms.archivesms.apiClient.ApiClient;
 import com.kingsms.archivesms.apiClient.ApiInterface;
 import com.kingsms.archivesms.background_services.GetNotificationsService;
 import com.kingsms.archivesms.dagger.DaggerApplication;
+import com.kingsms.archivesms.helper.AppController;
 import com.kingsms.archivesms.helper.OnItemClickDeleteHomeListener;
 import com.kingsms.archivesms.helper.OnItemClickListener;
 import com.kingsms.archivesms.helper.Utilities;
@@ -43,12 +46,13 @@ import retrofit2.Response;
 
 public class HomeSenderNamesActivity extends AppCompatActivity  {
 
-    List<String> senderNames;
+    public   List<String> senderNames;
     List<String> notificationIds;
 
 
     RecyclerView recyclerViewSenderNames;
     ProgressBar progressBarGetNotifications;
+    TextView text_not_found;
 
 //    @Inject
 //     HomeSenderNamesPresenter homeSenderNamesPresenter ;
@@ -62,7 +66,7 @@ public class HomeSenderNamesActivity extends AppCompatActivity  {
 //        homeSenderNamesPresenter.onAttach(this);
 
         progressBarGetNotifications = findViewById(R.id.progress_getNotifications);
-
+        text_not_found =findViewById(R.id.text_not_found);
         recyclerViewSenderNames = findViewById(R.id.recycle_sender_names);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -99,10 +103,13 @@ public class HomeSenderNamesActivity extends AppCompatActivity  {
         getAllNotificationIds();
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
         getNotReceivedNotifications();
+
+
         //getAllSenderNamesOfNotification();
 
         /*getNotReceivedNotifications();
@@ -125,6 +132,8 @@ public class HomeSenderNamesActivity extends AppCompatActivity  {
         }*/
 
     }
+
+
 
     private void getNotReceivedNotifications()
     {
@@ -153,7 +162,7 @@ public class HomeSenderNamesActivity extends AppCompatActivity  {
                 }
                 else {
 
-                    Toast.makeText(getApplicationContext(), "some thing error" + response.body().getCode(), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getApplicationContext(), "some thing error" + response.body().getCode(), Toast.LENGTH_SHORT).show();
                 }
                 getAllSenderNamesOfNotification();
             }
@@ -206,23 +215,32 @@ public class HomeSenderNamesActivity extends AppCompatActivity  {
 
     }
 
-    private void getAllSenderNamesOfNotification() {
+    public  void getAllSenderNamesOfNotification() {
+        senderNames = new ArrayList<>();
         MyDatabaseAdapter db = new MyDatabaseAdapter(this);
         db.open();
         Cursor c = db.getAllSenderNames();
-
         if(c != null)
-        if (c.moveToFirst()) {
-            senderNames = new ArrayList<>();
+        if (c.moveToNext()) {
+            //senderNames = new ArrayList<>();
             do {
                 addToSenderNameList(c);
             } while (c.moveToNext());
-
         }
 
+        if(senderNames.size() == 0)
+        {
+            text_not_found.setVisibility(View.VISIBLE);
+
+        }
+        else
+        {
+            text_not_found.setVisibility(View.GONE);
+
+        }
         if(senderNames != null)
         {
-            SenderNamesAdapter senderNamesAdapter = new SenderNamesAdapter(senderNames, this, new OnItemClickListener() {
+             senderNamesAdapter = new SenderNamesAdapter(senderNames, this, new OnItemClickListener() {
                 @Override
                 public void onItemClick(String item) {
 
@@ -239,7 +257,9 @@ public class HomeSenderNamesActivity extends AppCompatActivity  {
             });
 
             recyclerViewSenderNames.setAdapter(senderNamesAdapter);
+            senderNamesAdapter.notifyDataSetChanged();
         }
+
 
     }
 
@@ -247,8 +267,10 @@ public class HomeSenderNamesActivity extends AppCompatActivity  {
     {
         MyDatabaseAdapter myDatabaseAdapter = new MyDatabaseAdapter(this);
         myDatabaseAdapter.open();
-        myDatabaseAdapter.deleteSenderName(senderName);
+       boolean isDeleted =  myDatabaseAdapter.deleteSenderName(senderName);
+//        senderNamesAdapter.notifyDataSetChanged();
 
+       if(isDeleted)
         getAllSenderNamesOfNotification();
     }
 
@@ -259,7 +281,7 @@ public class HomeSenderNamesActivity extends AppCompatActivity  {
         myDatabaseAdapter.open();
         myDatabaseAdapter.deleteSenderNameOfAll(senderName);
 
-        getAllSenderNamesOfNotification();
+       // getAllSenderNamesOfNotification();
 
     }
 
@@ -378,7 +400,7 @@ public class HomeSenderNamesActivity extends AppCompatActivity  {
 
 
 
-    SenderNamesAdapter senderNamesAdapter ;
+    public     SenderNamesAdapter senderNamesAdapter ;
 //    @Override
 //    public void showResponse(ConfirmMessageDeliveryResponse confirmMessageDeliveryResponse) {
 //
