@@ -4,8 +4,8 @@ package com.kingsms.archivesms.dagger;
 import android.content.Context;
 
 import com.kingsms.archivesms.view.HomeActivity.HomeSenderNamesPresenter;
+import com.kingsms.archivesms.view.activation_code.ActivationCodePresenter;
 import com.kingsms.archivesms.view.login.LoginPresenter;
-import com.kingsms.archivesms.view.register.RegisterPresenter;
 
 import javax.inject.Singleton;
 
@@ -18,14 +18,6 @@ import dagger.Provides;
 
 @Module
 public class PresenterModule {
-
-
-    @Provides
-    @Singleton
-    RegisterPresenter provideRegisterPresenter(Context context) {
-
-        return new RegisterPresenter(context);
-    }
 
 
 
@@ -42,6 +34,12 @@ public class PresenterModule {
         return new HomeSenderNamesPresenter(context);
     }
 
+    @Provides
+    @Singleton
+    ActivationCodePresenter activationCodePresenter(Context context) {
+
+        return new ActivationCodePresenter(context);
+    }
 
 
 }

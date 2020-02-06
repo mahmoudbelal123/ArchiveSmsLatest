@@ -1,9 +1,11 @@
 package com.kingsms.archivesms.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.view.WindowManager;
 
 import com.kingsms.archivesms.R;
@@ -16,6 +18,9 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
+
+
+
 
 
         overridePendingTransition(0, 0);

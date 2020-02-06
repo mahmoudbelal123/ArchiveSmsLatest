@@ -1,5 +1,10 @@
 package com.kingsms.archivesms.view.HomeActivity;
 
+import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +21,7 @@ import com.kingsms.archivesms.local_db.MyDatabaseAdapter;
 import com.kingsms.archivesms.model.NotificationModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
@@ -47,10 +53,27 @@ public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
 
         if(getIntent().getStringExtra("sender_name") != null) {
             getAllNotificationsOfSenderName(getIntent().getStringExtra("sender_name"));
+            Collections.reverse(notificationModelList);
              notificationsAdapter = new NotificationsAdapter(notificationModelList, this, new OnItemClickListener() {
                 @Override
-                public void onItemClick(String item) {
-                    deleteOneNotificationById(item);
+                public void onItemClick(final String item) {
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeSenderDetailsNotificationsActivity.this);
+                    alertDialog.setMessage(getString(R.string.confirm_delete));
+                    alertDialog.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            deleteOneNotificationById(item);
+
+                        }
+                    });
+                    alertDialog.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    alertDialog.show();
+
                 }
             });
             recyclerViewNotifications.setAdapter(notificationsAdapter);
@@ -68,19 +91,74 @@ public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Intent intent = new Intent(HomeSenderDetailsNotificationsActivity.this, HomeSenderNamesActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    public static void clearNotifications(Context context) {
+        try{
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancelAll();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        clearNotifications(this);
+
+    }
+
     private void deleteOneNotificationById(String notificationId){
         MyDatabaseAdapter myDatabaseAdapter = new MyDatabaseAdapter(this);
         myDatabaseAdapter.open();
          boolean isDeleted =   myDatabaseAdapter.deleteSpecificNotificationById(notificationId);
         getAllNotificationsOfSenderName(getIntent().getStringExtra("sender_name"));
 
+        Collections.reverse(notificationModelList);
         notificationsAdapter = new NotificationsAdapter(notificationModelList, this, new OnItemClickListener() {
             @Override
-            public void onItemClick(String item) {
-                deleteOneNotificationById(item);
+            public void onItemClick(final String item) {
+
+
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeSenderDetailsNotificationsActivity.this);
+                alertDialog.setMessage(getString(R.string.confirm_delete));
+                alertDialog.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteOneNotificationById(item);
+
+                    }
+                });
+                alertDialog.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                alertDialog.show();
+
             }
         });
+        if(notificationModelList.size() == 0)
+        {
+            txtNotFound.setVisibility(View.VISIBLE);
+
+        }
+        else
+        {
+            txtNotFound.setVisibility(View.GONE);
+
+        }
         recyclerViewNotifications.setAdapter(notificationsAdapter);
+
     }
 
 

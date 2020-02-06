@@ -1,4 +1,4 @@
-package com.kingsms.archivesms.view.register;
+package com.kingsms.archivesms.view.activation_code;
 
 import android.content.Context;
 import android.widget.Toast;
@@ -8,29 +8,30 @@ import com.kingsms.archivesms.apiClient.ApiInterface;
 import com.kingsms.archivesms.baseClass.BasePresenter;
 import com.kingsms.archivesms.dagger.DaggerApplication;
 import com.kingsms.archivesms.helper.Utilities;
-import com.kingsms.archivesms.model.register.RegisterRequest;
-import com.kingsms.archivesms.model.register.RegisterResponse;
+import com.kingsms.archivesms.model.activation_code.ActivationRequest;
+import com.kingsms.archivesms.model.activation_code.ActivationResponse;
+import com.kingsms.archivesms.model.login.LoginRequest;
+import com.kingsms.archivesms.model.login.LoginResponse2;
 
 import javax.inject.Inject;
-
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 
-public class RegisterPresenter implements BasePresenter<RegisterView> {
-    RegisterView mView;
+public class ActivationCodePresenter implements BasePresenter<ActivationCodeView> {
+    ActivationCodeView mView;
     @Inject
     ApiInterface mApiInterface;
     @Inject
     Context mContext;
-    RegisterRequest registerRequest;
+    ActivationRequest activationRequest;
 
 
 
     @Override
-    public void onAttach(RegisterView view) {
+    public void onAttach(ActivationCodeView view) {
         mView = view;
         mView.onAttache();
 
@@ -43,54 +44,38 @@ public class RegisterPresenter implements BasePresenter<RegisterView> {
         mView = null;
     }
     //create Constructor to get reference of api interface object
-    public RegisterPresenter(Context context){
+    public ActivationCodePresenter(Context context){
         ((DaggerApplication)context).getAppComponent().inject(this);
     }
 
     //this function created to load items from specific endpoint
-    public void registerPresenter(String full_name , String phone ,String password , String confirmPassword ) {
+    public void activatePresenter(String firebaseToken , String code  ,String phone ) {
 
         try {
             if (!Utilities.checkConnection(mContext)) {
-                mView.showErrorMessage("No Internet !");
+                mView.showErrorMessage(mContext.getString(R.string.check_internet));
                 return;
             }
 
 
-            else if (full_name.equals("")) {
-                mView.showNameError();
-                return;
-
-            } else if (phone.equals("")) {
-
+            else if (phone.equals("")) {
                 mView.showPhoneError();
                 return;
 
             }
-            else if (password.equals("")) {
 
-                mView.showPasswordError();
-                return;
-
-            }
-            else if (!password.equals(confirmPassword)) {
-
-                mView.showConfirmPasswordError();
-                return;
-
-            }
             else {
                 mView.showLoading();
 
-                registerRequest = new RegisterRequest();
-                registerRequest.setFull_name(full_name);
-                registerRequest.setPhone(phone);
-                registerRequest.setPassword(password);
+                activationRequest = new ActivationRequest();
+                activationRequest.setCode(code);
+                activationRequest.setPhone(phone);
+                activationRequest.setFirebase_token(firebaseToken);
 
-                mApiInterface.registerObservable(registerRequest)
+                mApiInterface.activateObservable(activationRequest)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<RegisterResponse>() {
+                        .subscribe(new Subscriber<ActivationResponse>() {
                             @Override
                             public final void onCompleted() {
 
@@ -108,9 +93,10 @@ public class RegisterPresenter implements BasePresenter<RegisterView> {
                             }
 
                             @Override
-                            public final void onNext(RegisterResponse response) {
+                            public final void onNext(ActivationResponse response) {
                                mView.hideLoading();
-                                mView.showSuccessMessage(response.getMessage());
+                                mView.showSuccessMessage(response);
+                                Utilities.saveUserInfo(mContext , response);
 
                             }
                         });

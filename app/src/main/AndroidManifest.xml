@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:name=".dagger.DaggerApplication"
@@ -15,12 +17,10 @@
         android:roundIcon="@drawable/sms_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-
         android:usesCleartextTraffic="true">
-
-        <activity android:name=".view.HomeActivity.HomeSenderNamesActivity"></activity>
-
-        <activity android:name=".view.HomeActivity.HomeSenderDetailsNotificationsActivity"></activity>
+        <activity android:name=".view.activation_code.ActivationCodeActivity"></activity>
+        <activity android:name=".view.HomeActivity.HomeSenderNamesActivity" />
+        <activity android:name=".view.HomeActivity.HomeSenderDetailsNotificationsActivity" />
         <activity android:name=".view.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.login.LoginActivity" />
-        <activity android:name=".view.register.RegisterActivity"></activity>
+        <activity android:name=".view.register.RegisterActivity" />
 
         <service
             android:name=".handle_notification"
@@ -38,10 +38,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <service android:name=".background_services.GetNotificationsService"
-            android:permission="android.permission.BIND_JOB_SERVICE" ></service>
-
     </application>
 
 </manifest>

@@ -1,3 +1,21 @@
 <resources>
-    <string name="app_name">ArchiveSms</string>
+    <string name="app_name">My Notifications</string>
+    <string name="enter_mobile_number">Enter Mobile Number</string>
+    <string name="mobile_number_is_empty">Mobile Number is Empty</string>
+    <string name="login">Login</string>
+    <string name="enter_code">Enter Code</string>
+    <string name="send_code">Send Code</string>
+    <string name="invalid_code">Invalid Activation Code, Try again</string>
+    <string name="Unread_Messages">Unread Messages</string>
+    <string name="message">message</string>
+    <string name="notifications">notifications</string>
+    <string name="Message_is_Copied">Message is Copied</string>
+    <string name="there_is"> There is </string>
+    <string name="new_messages" > New Messages </string>
+    <string name="confirm_delete">Are you sure to delete this message ?</string>
+    <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="check_internet">No Internet Connection!</string>
+
 </resources>

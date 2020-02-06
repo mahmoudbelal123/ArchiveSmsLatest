@@ -1,22 +1,21 @@
-package com.kingsms.archivesms.view.register;
+package com.kingsms.archivesms.view.activation_code;
 
 
 import com.kingsms.archivesms.baseClass.BaseView;
+import com.kingsms.archivesms.model.activation_code.ActivationResponse;
 
 //class created for register function for main view
-public interface RegisterView extends BaseView {
+public interface ActivationCodeView extends BaseView {
 
     void showLoading();
 
     void hideLoading();
 
     void showErrorMessage(String message);
-    void showSuccessMessage(String message);
+    void showSuccessMessage(ActivationResponse response);
 
-    void showNameError();
     void showPasswordError();
     void showPhoneError();
-    void showConfirmPasswordError();
 
 
 }

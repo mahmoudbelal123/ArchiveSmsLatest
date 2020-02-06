@@ -1,8 +1,8 @@
-package com.kingsms.archivesms.model.login;
+package com.kingsms.archivesms.model.activation_code;
 
 import com.google.gson.annotations.SerializedName;
 
-public class LoginRequest {
+public class ActivationRequest {
     @SerializedName("phone")
     private String phone;
 
@@ -18,6 +18,17 @@ public class LoginRequest {
     @SerializedName("firebase_token")
     private String firebase_token;
 
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    @SerializedName("code")
+    private String code;
 
     public String getPhone() {
         return phone;

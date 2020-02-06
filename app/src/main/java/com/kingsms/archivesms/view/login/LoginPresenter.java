@@ -3,15 +3,16 @@ package com.kingsms.archivesms.view.login;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.kingsms.archivesms.R;
 import com.kingsms.archivesms.apiClient.ApiInterface;
 import com.kingsms.archivesms.baseClass.BasePresenter;
 import com.kingsms.archivesms.dagger.DaggerApplication;
 import com.kingsms.archivesms.helper.Utilities;
 import com.kingsms.archivesms.model.login.LoginRequest;
 import com.kingsms.archivesms.model.login.LoginResponse;
+import com.kingsms.archivesms.model.login.LoginResponse2;
 import com.kingsms.archivesms.model.register.RegisterRequest;
 import com.kingsms.archivesms.model.register.RegisterResponse;
-import com.kingsms.archivesms.view.register.RegisterView;
 
 import javax.inject.Inject;
 
@@ -49,11 +50,11 @@ public class LoginPresenter implements BasePresenter<LoginView> {
     }
 
     //this function created to load items from specific endpoint
-    public void loginPresenter(String firebaseToken , String phone ,String password ) {
+    public void loginPresenter(String firebaseToken , String phone  ) {
 
         try {
             if (!Utilities.checkConnection(mContext)) {
-                mView.showErrorMessage("No Internet !");
+                mView.showErrorMessage(mContext.getString(R.string.check_internet));
                 return;
             }
 
@@ -63,24 +64,18 @@ public class LoginPresenter implements BasePresenter<LoginView> {
                 return;
 
             }
-            else if (password.equals("")) {
 
-                mView.showPasswordError();
-                return;
-
-            }
             else {
                 mView.showLoading();
 
                 loginRequest = new LoginRequest();
                 loginRequest.setPhone(phone);
-                loginRequest.setPassword(password);
                 loginRequest.setFirebase_token(firebaseToken);
 
                 mApiInterface.loginObservable(loginRequest)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<LoginResponse>() {
+                        .subscribe(new Subscriber<LoginResponse2>() {
                             @Override
                             public final void onCompleted() {
 
@@ -98,10 +93,10 @@ public class LoginPresenter implements BasePresenter<LoginView> {
                             }
 
                             @Override
-                            public final void onNext(LoginResponse response) {
+                            public final void onNext(LoginResponse2 response) {
                                mView.hideLoading();
                                 mView.showSuccessMessage(""+response.getCode());
-                                Utilities.saveUserInfo(mContext , response);
+                               //>> Utilities.saveUserInfo(mContext , response);
 
                             }
                         });

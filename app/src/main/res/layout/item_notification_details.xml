@@ -22,42 +22,41 @@
        <LinearLayout
            android:orientation="vertical"
            android:layout_weight=".8"
-           style="@style/customfontstyle"
-           android:fontFamily="@font/jareeda"
+
            android:layout_margin="5dp"
            android:gravity="center"
            android:text="notifications"
            android:layout_width="match_parent"
            android:layout_height="wrap_content">
         <TextView
-            style="@style/customfontstyle"
-            android:fontFamily="@font/jareeda"
+            android:textIsSelectable="true"
+
+            android:textSize="16sp"
             android:id="@+id/text_notifications_details"
             android:layout_margin="5dp"
             android:gravity="center"
-            android:text="notifications"
+            android:text="@string/notifications"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
            <TextView
-               style="@style/customfontstyle"
-               android:fontFamily="@font/jareeda"
+
                android:layout_margin="5dp"
                android:gravity="start"
                android:layout_width="match_parent"
                android:layout_height="wrap_content" />
 
            <TextView
-               style="@style/customfontstyle"
-               android:fontFamily="@font/jareeda"
+
                android:layout_margin="5dp"
                android:gravity="start"
                android:layout_width="match_parent"
                android:layout_height="wrap_content" />
            <TextView
-               style="@style/customfontstyle"
                android:id="@+id/text_time_notification"
                android:gravity="start"
-               android:text="00:00"
+               android:text=""
+               android:textSize="12sp"
+               android:textColor="@color/colorPrimaryDark"
                android:layout_width="match_parent"
                android:layout_height="wrap_content" />
        </LinearLayout>
@@ -73,6 +72,7 @@
         android:background="@drawable/delete"
         android:layoutDirection="locale"
         android:textDirection="locale" />
+
 
 </LinearLayout>
     </android.support.v7.widget.CardView>

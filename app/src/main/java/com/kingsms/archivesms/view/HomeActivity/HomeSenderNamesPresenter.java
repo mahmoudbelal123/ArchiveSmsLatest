@@ -11,7 +11,6 @@ import com.kingsms.archivesms.model.confirm_message_delivery.ConfirmMessageDeliv
 import com.kingsms.archivesms.model.confirm_message_delivery.ConfirmMessageRequest;
 import com.kingsms.archivesms.model.register.RegisterRequest;
 import com.kingsms.archivesms.model.register.RegisterResponse;
-import com.kingsms.archivesms.view.register.RegisterView;
 
 import java.util.ArrayList;
 import java.util.List;

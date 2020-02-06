@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.kingsms.archivesms.model.activation_code.ActivationResponse;
 import com.kingsms.archivesms.model.login.LoginResponse;
+import com.kingsms.archivesms.model.login.LoginResponse2;
 
 import java.util.Locale;
 
@@ -18,7 +20,7 @@ public class Utilities {
     public static  String SharedPreferences_token_key="token";
 
 
-    public static void saveUserInfo(Context context , LoginResponse loginResponse)
+    public static void saveUserInfo(Context context , ActivationResponse loginResponse)
     {
         sharedPreferences = context.getSharedPreferences(SharedPreferencesName, 0);
         SharedPreferences.Editor editor= sharedPreferences.edit();
@@ -38,12 +40,12 @@ public class Utilities {
     }
 
 
-    public static LoginResponse retrieveUserInfo(Context context)
+    public static ActivationResponse retrieveUserInfo(Context context)
     {
         sharedPreferences = context.getSharedPreferences(SharedPreferencesName, 0);
         Gson gson = new Gson();
         String json = sharedPreferences.getString(SharedPreferences_token_key,null);
-        LoginResponse obj = gson.fromJson(json , LoginResponse.class);
+        ActivationResponse obj = gson.fromJson(json , ActivationResponse.class);
 
         return obj;
     }

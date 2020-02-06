@@ -1,12 +1,52 @@
 package com.kingsms.archivesms;
 
+import android.database.Cursor;
+
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.kingsms.archivesms.local_db.MyDatabaseAdapter;
 import com.kingsms.archivesms.view.HomeActivity.HomeSenderNamesActivity;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import me.leolin.shortcutbadger.ShortcutBadger;
+
 public class handle_notification extends FirebaseMessagingService {
+
+    private void addToStatusList(Cursor c) {
+        status.add((c.getInt(1)));
+
+
+    }
+    List<Integer> status = new ArrayList<>() ;
+    private  void  getStatus()
+    {
+
+        status= new ArrayList<>();
+        final MyDatabaseAdapter db = new MyDatabaseAdapter(this);
+        db.open();
+        Cursor c = db.getAllUnread();
+        if(c != null)
+            if (c.moveToNext()) {
+                //senderNames = new ArrayList<>();
+                do {
+                    addToStatusList(c);
+                } while (c.moveToNext());
+            }
+    }
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+       // getStatus();
+        //if(status != null)
+        //ShortcutBadger.applyCount(handle_notification.this,status.size() );
+
+    }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -42,8 +82,10 @@ public class handle_notification extends FirebaseMessagingService {
         String content = (String) map.get("content");
 
         MyNotificationManager mNotificationManager = new MyNotificationManager(getBaseContext());
-          if(time == null)
-             time = "00:00";
+        Date currentTime = Calendar.getInstance().getTime();
+
+        if(time == null)
+             time = currentTime.toString();
         mNotificationManager.showNewNotification(notificationId ,time ,sender_name ,  title , content);
 
 

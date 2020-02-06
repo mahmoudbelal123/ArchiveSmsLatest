@@ -20,11 +20,12 @@ public class MyDatabaseAdapter {
     static final int DATABASE_VERSION = 1;
 
 
-    static final String NOTIFICATION_TABLE = "create table "+DATABASE_TABLE_OF_NOTIFICATION_ALL+" (_id integer primary key autoincrement, "
-            + "notification_id integer not null unique , sender_name varchar not null,title varchar not null,time text not null,content varchar not null);";
+    static final String NOTIFICATION_TABLE
+            = "create table "+DATABASE_TABLE_OF_NOTIFICATION_ALL+" (_id integer primary key autoincrement,"
+            + "notification_id varchar not null unique, sender_name varchar not null,title varchar not null,time text not null,content varchar not null);";
 
     static final String SENDER_NAMES_TABLE = "create table "+DATABASE_TABLE_OF_SENDER_NAMES+" (_id integer primary key autoincrement, "
-            + "sender_name varchar not null unique);";
+            + "sender_name varchar not null unique, status integer ,time_milli long);";
 
 
     final Context context;
@@ -101,13 +102,40 @@ public class MyDatabaseAdapter {
         return db.insert(DATABASE_TABLE_OF_NOTIFICATION_ALL, null, initialValues);
     }
 
-    public long insertSenderNames(String sender_name)
+    public long insertSenderNames(String sender_name , int status , long time_milli)
     {
         ContentValues initialValues = new ContentValues();
         initialValues.put("sender_name", sender_name);
+        initialValues.put("status", status);
+        initialValues.put("time_milli" ,time_milli);
 
         return db.insert(DATABASE_TABLE_OF_SENDER_NAMES, null, initialValues);
     }
+
+    public long updateStatusOfNotification(String sender_name , int status , long time_milli)
+    {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put("status",status);
+        initialValues.put("time_milli",time_milli);
+        return db.update(DATABASE_TABLE_OF_SENDER_NAMES, initialValues,"sender_name"+"='"+sender_name+"'" , null);
+    }
+
+    public long updateStatusOfNotificationForClickToDetails(String sender_name , int status )
+    {
+        ContentValues initialValues = new ContentValues();
+        initialValues.put("status",status);
+        return db.update(DATABASE_TABLE_OF_SENDER_NAMES, initialValues,"sender_name"+"='"+sender_name+"'" , null);
+    }
+    public Cursor getAllUnread()
+    {
+        return db.query(DATABASE_TABLE_OF_SENDER_NAMES, new String[] {KEY_ROWID}, "status"+"!='0'", null, null, null, null);
+    }
+
+    public Cursor getStatusOfSenderName(String senderName)
+    {
+        return db.query(DATABASE_TABLE_OF_SENDER_NAMES, new String[] {KEY_ROWID,"status"}, "sender_name"+"='"+senderName+"'", null, null, null, null);
+    }
+
 
 
     public boolean deleteSpecificNotificationById(String rowId)
@@ -128,7 +156,7 @@ public class MyDatabaseAdapter {
     //---retrieves all the UpComing Trips---
     public Cursor getAllSenderNames()
     {
-        return db.query(DATABASE_TABLE_OF_SENDER_NAMES, new String[] {KEY_ROWID, "sender_name"}, null, null, null, null, null);
+        return db.query(DATABASE_TABLE_OF_SENDER_NAMES, new String[] {KEY_ROWID, "sender_name","status"}, null  , null, null, null, "time_milli DESC");
     }
 
     public Cursor getNotificationsBySenderName(String sender_name)

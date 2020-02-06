@@ -1,5 +1,6 @@
 package com.kingsms.archivesms.adapters;
 
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kingsms.archivesms.R;
 import com.kingsms.archivesms.helper.OnItemClickListener;
@@ -50,7 +52,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         holder.txtNotificationDetails.setText(notificationList.get(position).getContent());
         holder.txtTime.setText(notificationList.get(position).getTime());
         holder.imgDeleteMsg.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +62,17 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             }
         });
 
+
+        holder.txtNotificationDetails.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                ClipboardManager cm = (ClipboardManager)mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setText(holder.txtNotificationDetails.getText());
+                Toast.makeText(mContext, ""+mContext.getString(R.string.Message_is_Copied), Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
     }
 
     @Override
