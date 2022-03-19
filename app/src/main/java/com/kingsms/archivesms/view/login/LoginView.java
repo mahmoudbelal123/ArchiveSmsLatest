@@ -11,9 +11,11 @@ public interface LoginView extends BaseView {
     void hideLoading();
 
     void showErrorMessage(String message);
+
     void showSuccessMessage(String message);
 
     void showPasswordError();
+
     void showPhoneError();
 
 

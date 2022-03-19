@@ -11,7 +11,7 @@ public interface HomeSenderNamesView extends BaseView {
 
     void hideLoading();
 
-     void showResponse(ConfirmMessageDeliveryResponse confirmMessageDeliveryResponse);
+    void showResponse(ConfirmMessageDeliveryResponse confirmMessageDeliveryResponse);
 
 
 }

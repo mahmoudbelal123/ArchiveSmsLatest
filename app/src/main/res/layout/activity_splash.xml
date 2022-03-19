@@ -1,16 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
+    android:gravity="center"
+    android:layoutDirection="locale"
+    android:orientation="vertical"
+    android:textDirection="locale"
     tools:context=".view.SplashActivity">
 
-    <ImageView
-        android:layout_gravity="center"
-        android:src="@drawable/sms_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
-</FrameLayout>
+
+    <ImageView
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:layout_gravity="center"
+        android:scaleType="centerInside"
+        android:src="@drawable/app_logo" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:text="@string/splash_hint"
+        android:textColor="@color/colorAccent"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/button_add_account"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/button_border"
+        android:text="@string/splash_button_add_new_account"
+        android:textColor="@color/colorWhite" />
+</LinearLayout>

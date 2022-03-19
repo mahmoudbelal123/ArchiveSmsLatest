@@ -9,10 +9,7 @@ import com.kingsms.archivesms.baseClass.BasePresenter;
 import com.kingsms.archivesms.dagger.DaggerApplication;
 import com.kingsms.archivesms.helper.Utilities;
 import com.kingsms.archivesms.model.login.LoginRequest;
-import com.kingsms.archivesms.model.login.LoginResponse;
 import com.kingsms.archivesms.model.login.LoginResponse2;
-import com.kingsms.archivesms.model.register.RegisterRequest;
-import com.kingsms.archivesms.model.register.RegisterResponse;
 
 import javax.inject.Inject;
 
@@ -30,6 +27,10 @@ public class LoginPresenter implements BasePresenter<LoginView> {
     LoginRequest loginRequest;
 
 
+    //create Constructor to get reference of api interface object
+    public LoginPresenter(Context context) {
+        ((DaggerApplication) context).getAppComponent().inject(this);
+    }
 
     @Override
     public void onAttach(LoginView view) {
@@ -38,34 +39,23 @@ public class LoginPresenter implements BasePresenter<LoginView> {
 
     }
 
-
-
     @Override
     public void onDetach() {
         mView = null;
     }
-    //create Constructor to get reference of api interface object
-    public LoginPresenter(Context context){
-        ((DaggerApplication)context).getAppComponent().inject(this);
-    }
 
     //this function created to load items from specific endpoint
-    public void loginPresenter(String firebaseToken , String phone  ) {
+    public void loginPresenter(String firebaseToken, String phone) {
 
         try {
-            if (!Utilities.checkConnection(mContext)) {
+            if (!Utilities.checkConnection()) {
                 mView.showErrorMessage(mContext.getString(R.string.check_internet));
                 return;
-            }
-
-
-            else if (phone.equals("")) {
+            } else if (phone.equals("")) {
                 mView.showPhoneError();
                 return;
 
-            }
-
-            else {
+            } else {
                 mView.showLoading();
 
                 loginRequest = new LoginRequest();
@@ -86,7 +76,7 @@ public class LoginPresenter implements BasePresenter<LoginView> {
                             public final void onError(Throwable e) {
 
 
-                                Toast.makeText(mContext, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 mView.hideLoading();
 
 
@@ -94,9 +84,8 @@ public class LoginPresenter implements BasePresenter<LoginView> {
 
                             @Override
                             public final void onNext(LoginResponse2 response) {
-                               mView.hideLoading();
-                                mView.showSuccessMessage(""+response.getCode());
-                               //>> Utilities.saveUserInfo(mContext , response);
+                                mView.hideLoading();
+                                mView.showSuccessMessage("" + response.getCode());
 
                             }
                         });
@@ -104,22 +93,12 @@ public class LoginPresenter implements BasePresenter<LoginView> {
 
             }
 
-        }catch (Exception e)
-        {
-            mView.showErrorMessage("error \n"+e.getMessage());
+        } catch (Exception e) {
+            mView.showErrorMessage("error \n" + e.getMessage());
 
         }
 
     }
-
-
-
-
-
-
-
-
-
 
 
 }

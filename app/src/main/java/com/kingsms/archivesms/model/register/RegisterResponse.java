@@ -5,10 +5,10 @@ import com.google.gson.annotations.SerializedName;
 public class RegisterResponse {
 
     @SerializedName("message")
-    private  String message ;
+    private String message;
 
     @SerializedName("code")
-    private  int code;
+    private int code;
 
 
     public int getCode() {
@@ -20,7 +20,6 @@ public class RegisterResponse {
     }
 
 
-
     public String getMessage() {
         return message;
     }
@@ -28,7 +27,6 @@ public class RegisterResponse {
     public void setMessage(String message) {
         this.message = message;
     }
-
 
 
 }

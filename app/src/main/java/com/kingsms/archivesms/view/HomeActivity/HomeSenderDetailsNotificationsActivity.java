@@ -6,12 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kingsms.archivesms.R;
@@ -24,6 +21,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
 
     List<NotificationModel> notificationModelList;
@@ -31,8 +33,20 @@ public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
 
 
     RecyclerView recyclerViewNotifications;
-    NotificationsAdapter notificationsAdapter ;
+    NotificationsAdapter notificationsAdapter;
     TextView txtNotFound;
+    ImageView imageEmptyInbox;
+    int i = 0;
+
+    public static void clearNotifications(Context context) {
+        try {
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancelAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,9 +54,10 @@ public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
 
 
         txtNotFound = findViewById(R.id.text_not_found);
+        imageEmptyInbox = findViewById(R.id.image_empty);
         recyclerViewNotifications = findViewById(R.id.recycle_notifications_details);
 
-        notificationModel  = new NotificationModel();
+        notificationModel = new NotificationModel();
         notificationModelList = new ArrayList<>();
 
 
@@ -51,12 +66,12 @@ public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
         recyclerViewNotifications.setLayoutManager(mLayoutManager);
         recyclerViewNotifications.setItemAnimator(new DefaultItemAnimator());
 
-        if(getIntent().getStringExtra("sender_name") != null) {
+        if (getIntent().getStringExtra("sender_name") != null) {
             getAllNotificationsOfSenderName(getIntent().getStringExtra("sender_name"));
             Collections.reverse(notificationModelList);
-             notificationsAdapter = new NotificationsAdapter(notificationModelList, this, new OnItemClickListener() {
+            notificationsAdapter = new NotificationsAdapter(notificationModelList, this, new OnItemClickListener() {
                 @Override
-                public void onItemClick(final String item) {
+                public void onItemClick(final String item, int position) {
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeSenderDetailsNotificationsActivity.this);
                     alertDialog.setMessage(getString(R.string.confirm_delete));
                     alertDialog.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
@@ -79,14 +94,13 @@ public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
             recyclerViewNotifications.setAdapter(notificationsAdapter);
         }
 
-        if(notificationModelList.size() == 0)
-        {
+        if (notificationModelList.size() == 0) {
             txtNotFound.setVisibility(View.VISIBLE);
+            imageEmptyInbox.setVisibility(View.VISIBLE);
 
-        }
-        else
-        {
+        } else {
             txtNotFound.setVisibility(View.GONE);
+            imageEmptyInbox.setVisibility(View.GONE);
 
         }
     }
@@ -100,15 +114,6 @@ public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public static void clearNotifications(Context context) {
-        try{
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancelAll();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -116,16 +121,21 @@ public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
 
     }
 
-    private void deleteOneNotificationById(String notificationId){
+    private void deleteOneNotificationById(String notificationId) {
         MyDatabaseAdapter myDatabaseAdapter = new MyDatabaseAdapter(this);
         myDatabaseAdapter.open();
-         boolean isDeleted =   myDatabaseAdapter.deleteSpecificNotificationById(notificationId);
+        boolean isDeleted = myDatabaseAdapter.deleteSpecificNotificationById(notificationId);
+        if(isDeleted)
+        myDatabaseAdapter.close();
+        else if(i < 2){
+            myDatabaseAdapter.deleteSpecificNotificationById(notificationId);
+            i++;
+        }
         getAllNotificationsOfSenderName(getIntent().getStringExtra("sender_name"));
-
         Collections.reverse(notificationModelList);
         notificationsAdapter = new NotificationsAdapter(notificationModelList, this, new OnItemClickListener() {
             @Override
-            public void onItemClick(final String item) {
+            public void onItemClick(final String item, int position) {
 
 
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(HomeSenderDetailsNotificationsActivity.this);
@@ -147,13 +157,10 @@ public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
 
             }
         });
-        if(notificationModelList.size() == 0)
-        {
+        if (notificationModelList.size() == 0) {
             txtNotFound.setVisibility(View.VISIBLE);
 
-        }
-        else
-        {
+        } else {
             txtNotFound.setVisibility(View.GONE);
 
         }
@@ -162,8 +169,7 @@ public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
     }
 
 
-    private void getAllNotificationsOfSenderName(String senderName)
-    {
+    private void getAllNotificationsOfSenderName(String senderName) {
         notificationModelList = new ArrayList<>();
 
         MyDatabaseAdapter db = new MyDatabaseAdapter(this);
@@ -182,7 +188,7 @@ public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
 
     private void addToNotificationList(Cursor c) {
 
-        notificationModel  = new NotificationModel();
+        notificationModel = new NotificationModel();
 
         notificationModel.setTitle(c.getString(1));
         notificationModel.setTime(c.getString(2));

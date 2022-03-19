@@ -5,11 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -21,44 +20,53 @@ import com.kingsms.archivesms.helper.OnItemClickDeleteHomeListener;
 import com.kingsms.archivesms.helper.OnItemClickListener;
 import com.kingsms.archivesms.helper.Utilities;
 import com.kingsms.archivesms.local_db.MyDatabaseAdapter;
+import com.kingsms.archivesms.model.MapNotificationStatus;
 import com.kingsms.archivesms.model.NotificationStatus;
 import com.kingsms.archivesms.model.activation_code.ActivationResponse;
 import com.kingsms.archivesms.model.confirm_message_delivery.ConfirmMessageDeliveryResponse;
 import com.kingsms.archivesms.model.confirm_message_delivery.ConfirmMessageRequest;
+import com.kingsms.archivesms.view.my_profile.MyProfile;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeSenderNamesActivity extends AppCompatActivity  {
+public class HomeSenderNamesActivity extends AppCompatActivity {
 
-    public   List<NotificationStatus> senderNames;
+    public List<NotificationStatus> senderNames;
+    public List<MapNotificationStatus> mapSenderNames;
+    public SenderNamesAdapter senderNamesAdapter;
     List<String> notificationIds;
-
-
     RecyclerView recyclerViewSenderNames;
     ProgressBar progressBarGetNotifications;
     TextView text_not_found;
+    ImageView imageEmptyInbox;
+    List<Integer> status = new ArrayList<>();
+    List<String> contactsList = new ArrayList<>();
+    List<Integer> listIds = new ArrayList<>();
 
-//    @Inject
-//     HomeSenderNamesPresenter homeSenderNamesPresenter ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-//        ((DaggerApplication) getApplication()).getAppComponent().inject(this);
-//        homeSenderNamesPresenter.onAttach(this);
-
         progressBarGetNotifications = findViewById(R.id.progress_getNotifications);
-        text_not_found =findViewById(R.id.text_not_found);
+        text_not_found = findViewById(R.id.text_not_found);
+        imageEmptyInbox = findViewById(R.id.image_empty);
         recyclerViewSenderNames = findViewById(R.id.recycle_sender_names);
+
+        // navigationView =findViewById(R.id.nav_view);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
 
@@ -67,24 +75,7 @@ public class HomeSenderNamesActivity extends AppCompatActivity  {
 
         senderNames = new ArrayList<>();
         notificationIds = new ArrayList<>();
-
-       //getNotReceivedNotifications();
-        //getAllSenderNamesOfNotification();
-
-//       if(senderNames != null)
-//        {
-//            SenderNamesAdapter senderNamesAdapter = new SenderNamesAdapter(senderNames, this, new OnItemClickListener() {
-//                @Override
-//                public void onItemClick(String item) {
-//
-//                    Intent intent = new Intent(HomeSenderNamesActivity.this , HomeSenderDetailsNotificationsActivity.class);
-//                    intent.putExtra("sender_name",item);
-//                    startActivity(intent);
-//                }
-//            });
-//
-//            recyclerViewSenderNames.setAdapter(senderNamesAdapter);
-//        }
+        mapSenderNames = new ArrayList<>();
 
         getNotReceivedNotifications();
         getAllNotificationIds();
@@ -94,14 +85,35 @@ public class HomeSenderNamesActivity extends AppCompatActivity  {
     protected void onPostResume() {
         super.onPostResume();
         //TODO get all notifications Ids
-       // getAllNotificationIds();
+        // getAllNotificationIds();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // action with ID action_refresh was selected
+            case R.id.action_settings:
+                Intent intent = new Intent(HomeSenderNamesActivity.this, MyProfile.class);
+                startActivity(intent);
+
+                break;
+            default:
+                break;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.new_home, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
-       // getNotReceivedNotifications();
+        // getNotReceivedNotifications();
 
 
         //getAllSenderNamesOfNotification();
@@ -127,10 +139,7 @@ public class HomeSenderNamesActivity extends AppCompatActivity  {
 
     }
 
-
-
-    private void getNotReceivedNotifications()
-    {
+    private void getNotReceivedNotifications() {
         progressBarGetNotifications.setVisibility(View.VISIBLE);
         List<Integer> list = new ArrayList<>();
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
@@ -148,18 +157,18 @@ public class HomeSenderNamesActivity extends AppCompatActivity  {
                 if (response.code() == 200) {
                     for (int i = 0; i < response.body().getNot_send_messages().size(); i++) {
                         saveNotificationToLocalDatabase("" + response.body().getNot_send_messages().get(i).getNotification_id(),
-                                response.body().getNot_send_messages().get(i).getTime()
+                                response.body().getNot_send_messages().get(i).getTime().getDate()
                                 , response.body().getNot_send_messages().get(i).getSender_name(),
                                 response.body().getNot_send_messages().get(i).getTitle()
-                                , response.body().getNot_send_messages().get(i).getContent(),true);
+                                , response.body().getNot_send_messages().get(i).getContent(), true);
                     }
-                }
-                else {
+                } else {
 
-                   // Toast.makeText(getApplicationContext(), "some thing error" + response.body().getCode(), Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(getApplicationContext(), "some thing error" + response.body().getCode(), Toast.LENGTH_SHORT).show();
                 }
                 getAllSenderNamesOfNotification();
             }
+
             @Override
             public void onFailure(Call<ConfirmMessageDeliveryResponse> call, Throwable t) {
 
@@ -168,28 +177,18 @@ public class HomeSenderNamesActivity extends AppCompatActivity  {
                 getAllSenderNamesOfNotification();
 
 
-
             }
         });
 
 
-
-
     }
-    private void addToStatusList(Cursor c) {
-        status.add((c.getInt(1)));
 
-
-    }
-    List<Integer>  status = new ArrayList<>() ;
-    private  void  getStatus(String senderName)
-    {
-
-        status= new ArrayList<>();
+    private void getStatus(String senderName) {
+        status = new ArrayList<>();
         final MyDatabaseAdapter db = new MyDatabaseAdapter(this);
         db.open();
         Cursor c = db.getStatusOfSenderName(senderName);
-        if(c != null)
+        if (c != null)
             if (c.moveToNext()) {
                 //senderNames = new ArrayList<>();
                 do {
@@ -198,111 +197,98 @@ public class HomeSenderNamesActivity extends AppCompatActivity  {
             }
     }
 
+    private void addToStatusList(Cursor c) {
+        status.add((c.getInt(1)));
+    }
+
+    private List<String> getContact(String contactPhone) {
+        contactsList = new ArrayList<>();
+        final MyDatabaseAdapter db = new MyDatabaseAdapter(this);
+        db.open();
+        Cursor c = db.getContact(contactPhone);
+        if (c != null)
+            if (c.moveToNext()) {
+                //senderNames = new ArrayList<>();
+                do {
+                    addToContactList(c);
+                } while (c.moveToNext());
+            }
+
+        return contactsList;
+    }
+
+    private void addToContactList(Cursor c) {
+        contactsList.add((c.getString(1)));
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
 
     }
 
-    private  void saveNotificationToLocalDatabase(String notificationId , String time , String senderName, String title, String content, boolean updateStatus)
-    {
+    private void saveNotificationToLocalDatabase(String notificationId, String time, String senderName, String title, String content, boolean updateStatus) {
+        if (time == null)
+            time = "" + android.text.format.DateFormat.format("yyyy-MM-dd hh:mm:ss", new java.util.Date());
+        contactsList = getContact("" + senderName);
+        Date date = null;
+        if (contactsList.size() != 0)
+            senderName = contactsList.get(0);
+
+        long timeMilli = 0;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
+            date = sdf.parse(time);
+            if (date == null)
+                timeMilli = Calendar.getInstance().getTimeInMillis();
+            else
+                timeMilli = date.getTime();
+        } catch (Exception e) {
+            if (date != null)
+                timeMilli = date.getTime();
+        }
         MyDatabaseAdapter db = new MyDatabaseAdapter(this);
         db.open();
-        Date currentTime = Calendar.getInstance().getTime();
 
-
-        if(time == null)
-            time = ""+android.text.format.DateFormat.format("yyyy-MM-dd \nhh:mm:ss a", new java.util.Date());
-
-        long id = db.insertNotification(notificationId, senderName, time, content, title);
-         long idSenderNamesInserted ;
-//        if(status.size()!=0 ) {
-//            // idSenderNamesInserted = db.insertSenderNames(senderName ,status.get(0));
-//            db.updateStatusOfNotification(senderName, (status.get(0)) + 1);
-//        }else {
-//            idSenderNamesInserted = db.insertSenderNames(senderName, 1);
-//        }
-        long timeMili= System.currentTimeMillis();
-
-        idSenderNamesInserted = db.insertSenderNames(senderName, 0,timeMili);
-
-
+        long id = db.insertNotification(notificationId, senderName, String.valueOf(timeMilli), content, title);
+        db.insertSenderNames(senderName, 0, timeMilli);
         if (id > -1) {
-            // Toast.makeText(this, "Notification All Content Inserted Done ", Toast.LENGTH_SHORT).show();
-            //TODO send Request to change the status on the server side - by using notification_id -
             getStatus(senderName);
-            db.updateStatusOfNotification(senderName, (status.get(0)) + 1 ,timeMili);
-
-
-        } else {
-
-             // Toast.makeText(this, "Notification All Content Not Inserted", Toast.LENGTH_SHORT).show();
+            db.updateStatusOfNotification(senderName, (status.get(0)) + 1, timeMilli);
         }
-        if (idSenderNamesInserted > -1) {
-            // Toast.makeText(this, "Sender Name Inserted Done ", Toast.LENGTH_SHORT).show();
-            //TODO send Request to change the status on the server side - by using notification_id -
-
-
-        } else {
-
-            //if(updateStatus)
-          //  db.updateStatusOfNotification(senderName , (status.get(0))+1);
-           //  Toast.makeText(this, "Sender Name Not Inserted", Toast.LENGTH_SHORT).show();
-        }
-
-
     }
 
-    public  void getAllSenderNamesOfNotification() {
+    public void getAllSenderNamesOfNotification() {
         senderNames = new ArrayList<>();
         final MyDatabaseAdapter db = new MyDatabaseAdapter(this);
         db.open();
         Cursor c = db.getAllSenderNames();
-        if(c != null)
-        if (c.moveToNext()) {
-            //senderNames = new ArrayList<>();
-            do {
-                addToSenderNameList(c);
-            } while (c.moveToNext());
-        }
+        if (c != null)
+            if (c.moveToNext()) {
+                do {
+                    addToSenderNameList(c);
+                } while (c.moveToNext());
+            }
 
-        if(senderNames.size() == 0)
-        {
+        if (senderNames.size() == 0) {
             text_not_found.setVisibility(View.VISIBLE);
+            imageEmptyInbox.setVisibility(View.VISIBLE);
 
-        }
-        else
-        {
+        } else {
             text_not_found.setVisibility(View.GONE);
+            imageEmptyInbox.setVisibility(View.GONE);
+
 
         }
-        if(senderNames != null)
-        {
+        if (senderNames != null) {
 
-//             List<String> stringList = new ArrayList<>();
-//             List<Integer> statusList = new ArrayList<>();
-//
-//             for (int  i = 0 ; i < senderNames.size() ; i++)
-//             {
-//                 stringList.add(senderNames.get(i).getSenderName());
-//                 statusList.add(senderNames.get(i).getStatus());
-//             }
-//            Set<String> s = new LinkedHashSet<>(stringList);
-//             stringList = new ArrayList<>(s);
-//            Collections.reverse(stringList);
-//
-//            Set<Integer> s2 = new LinkedHashSet<>(statusList);
-//            statusList = new ArrayList<>(s2);
-//            Collections.reverse(statusList);
 
-            //final long timeMili= System.currentTimeMillis();
-
-            senderNamesAdapter = new SenderNamesAdapter(senderNames,this, new OnItemClickListener() {
+            senderNamesAdapter = new SenderNamesAdapter(senderNames, this, new OnItemClickListener() {
                 @Override
-                public void onItemClick(String item) {
+                public void onItemClick(String item, int position) {
 
-                    if(!item.equals(null))
-                    db.updateStatusOfNotificationForClickToDetails(item , 0);
+                    if (!item.equals(null))
+                        db.updateStatusOfNotificationForClickToDetails(item, 0);
 
                     Intent intent = new Intent(HomeSenderNamesActivity.this, HomeSenderDetailsNotificationsActivity.class);
                     intent.putExtra("sender_name", item);
@@ -324,7 +310,7 @@ public class HomeSenderNamesActivity extends AppCompatActivity  {
                     alertDialog.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                         dialog.dismiss();
+                            dialog.dismiss();
                         }
                     });
                     alertDialog.show();
@@ -340,43 +326,30 @@ public class HomeSenderNamesActivity extends AppCompatActivity  {
 
     }
 
-
-    private  void showConfirmDialog()
-    {
-
-
-
-
-    }
-    private void deleteAllSenderNames(String senderName)
-    {
+    private void deleteAllSenderNames(String senderName) {
         MyDatabaseAdapter myDatabaseAdapter = new MyDatabaseAdapter(this);
         myDatabaseAdapter.open();
-       boolean isDeleted =  myDatabaseAdapter.deleteSenderName(senderName);
-//        senderNamesAdapter.notifyDataSetChanged();
+        boolean isDeleted = myDatabaseAdapter.deleteSenderName(senderName);
 
-       if(isDeleted)
-        getAllSenderNamesOfNotification();
+        if (isDeleted)
+            getAllSenderNamesOfNotification();
     }
 
-
-    private void deleteAllSenderNamesNotifications(String senderName)
-    {
+    private void deleteAllSenderNamesNotifications(String senderName) {
         MyDatabaseAdapter myDatabaseAdapter = new MyDatabaseAdapter(this);
         myDatabaseAdapter.open();
         myDatabaseAdapter.deleteSenderNameOfAll(senderName);
 
-       // getAllSenderNamesOfNotification();
+        // getAllSenderNamesOfNotification();
 
     }
-
 
     private void getAllNotificationIds() {
         MyDatabaseAdapter db = new MyDatabaseAdapter(this);
         db.open();
         Cursor c = db.getAllNotificationIds();
 
-        if(c != null)
+        if (c != null)
             if (c.moveToFirst()) {
                 notificationIds = new ArrayList<>();
                 do {
@@ -385,21 +358,15 @@ public class HomeSenderNamesActivity extends AppCompatActivity  {
 
 
             }
-
-        //TODO Call again get all no received Notifications
-
-        for(int  i = 0 ; i < notificationIds.size() ; i++)
-        {
+        for (int i = 0; i < notificationIds.size(); i++) {
             listIds.add(Integer.parseInt(notificationIds.get(i)));
 
         }
-        if(listIds.size()!=0)
-        confirmReceivedMessages(listIds);
+        if (listIds.size() != 0)
+            confirmReceivedMessages(listIds);
     }
 
-    List<Integer> listIds = new ArrayList<>();
-    private void confirmReceivedMessages(List<Integer> listIds)
-    {
+    private void confirmReceivedMessages(List<Integer> listIds) {
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         ConfirmMessageRequest confirmMessageRequest = new ConfirmMessageRequest();
         confirmMessageRequest.setConfirmed_ids(listIds);
@@ -413,107 +380,35 @@ public class HomeSenderNamesActivity extends AppCompatActivity  {
                 if (response.code() == 200) {
                     for (int i = 0; i < response.body().getNot_send_messages().size(); i++) {
                         saveNotificationToLocalDatabase("" + response.body().getNot_send_messages().get(i).getNotification_id(),
-                                response.body().getNot_send_messages().get(i).getTime()
+                                response.body().getNot_send_messages().get(i).getTime().getDate()
                                 , response.body().getNot_send_messages().get(i).getSender_name(),
                                 response.body().getNot_send_messages().get(i).getTitle()
-                                , response.body().getNot_send_messages().get(i).getContent(),false);
+                                , response.body().getNot_send_messages().get(i).getContent(), false);
                     }
-                }
-                else {
+                } else {
 
                     //Toast.makeText(getApplicationContext(), "some thing error" + response.body().getCode(), Toast.LENGTH_SHORT).show();
                 }
                 getAllSenderNamesOfNotification();
             }
+
             @Override
             public void onFailure(Call<ConfirmMessageDeliveryResponse> call, Throwable t) {
 
                 call.cancel();
-               // progressBarGetNotifications.setVisibility(View.GONE);
-                //getAllSenderNamesOfNotification();
-
-
-
             }
         });
 
 
     }
+
     private void addToSenderNameList(Cursor c) {
-        senderNames.add(new NotificationStatus(c.getString(1) ,c.getInt(2)));
+        senderNames.add(new NotificationStatus(c.getString(1), c.getInt(2), c.getLong(3)));
 
 
     }
+
     private void addToNotificationIdsList(Cursor c) {
-        notificationIds .add(c.getString(1));
+        notificationIds.add(c.getString(1));
     }
-
-
-
-
- /*   private  void startServiceOfGetNotReceivedNotifications(){
-
-        getAllNotificationIds();
-
-        JobScheduler jobScheduler = (JobScheduler) getApplicationContext()
-                .getSystemService(JOB_SCHEDULER_SERVICE);
-        if(notificationIds != null) {
-            String arr[] = new String[notificationIds.size()];
-            for (int i = 0; i < notificationIds.size(); i++) {
-                arr[i] = notificationIds.get(i);
-            }
-
-            PersistableBundle bundle = new PersistableBundle();
-            bundle.putStringArray("ids", arr);
-
-            ComponentName componentName = new ComponentName(getApplicationContext(),
-                    GetNotificationsService.class);
-
-            JobInfo jobInfo = new JobInfo.Builder(1, componentName)
-                    .setPeriodic(10000).setRequiredNetworkType(
-                            JobInfo.NETWORK_TYPE_NOT_ROAMING)
-                    .setExtras(bundle)
-                    .setPersisted(true).build();
-
-            jobScheduler.schedule(jobInfo);
-        }
-
-    }*/
-
-
-
-    public     SenderNamesAdapter senderNamesAdapter ;
-//    @Override
-//    public void showResponse(ConfirmMessageDeliveryResponse confirmMessageDeliveryResponse) {
-//
-//        //TODO  - save received messages in local db , show them to the user -
-//
-//      for(int i = 0 ; i < confirmMessageDeliveryResponse.getNot_send_messages().size() ; i++)
-//      {
-//          String name = confirmMessageDeliveryResponse.getNot_send_messages().get(i).getSender_name();
-//          senderNames.add(name);
-//
-//      }
-//
-//        if(senderNames !=null)
-//        {
-//             senderNamesAdapter = new SenderNamesAdapter(senderNames, this, new OnItemClickListener() {
-//                @Override
-//                public void onItemClick(String item) {
-//
-//                    Intent intent = new Intent(HomeSenderNamesActivity.this , HomeSenderDetailsNotificationsActivity.class);
-//                    intent.putExtra("sender_name",item);
-//                    startActivity(intent);
-//                }
-//            });
-//
-//            recyclerViewSenderNames.setAdapter(senderNamesAdapter);
-//        }
-//
-//
-//    }
-
-
-
-
 }

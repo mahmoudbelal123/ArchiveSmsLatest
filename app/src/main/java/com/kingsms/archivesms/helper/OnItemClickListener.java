@@ -1,6 +1,6 @@
 package com.kingsms.archivesms.helper;
 
 public interface OnItemClickListener {
-    void onItemClick(String item);
+    void onItemClick(String item, int position);
 
 }

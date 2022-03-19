@@ -1,25 +1,13 @@
 package com.kingsms.archivesms.view.HomeActivity;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.kingsms.archivesms.apiClient.ApiInterface;
 import com.kingsms.archivesms.baseClass.BasePresenter;
 import com.kingsms.archivesms.dagger.DaggerApplication;
-import com.kingsms.archivesms.helper.Utilities;
-import com.kingsms.archivesms.model.confirm_message_delivery.ConfirmMessageDeliveryResponse;
 import com.kingsms.archivesms.model.confirm_message_delivery.ConfirmMessageRequest;
-import com.kingsms.archivesms.model.register.RegisterRequest;
-import com.kingsms.archivesms.model.register.RegisterResponse;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
-
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 
 public class HomeSenderNamesPresenter implements BasePresenter<HomeSenderNamesView> {
@@ -31,6 +19,10 @@ public class HomeSenderNamesPresenter implements BasePresenter<HomeSenderNamesVi
     ConfirmMessageRequest confirmMessageRequest;
 
 
+    //create Constructor to get reference of api interface object
+    public HomeSenderNamesPresenter(Context context) {
+        ((DaggerApplication) context).getAppComponent().inject(this);
+    }
 
     @Override
     public void onAttach(HomeSenderNamesView view) {
@@ -39,15 +31,9 @@ public class HomeSenderNamesPresenter implements BasePresenter<HomeSenderNamesVi
 
     }
 
-
-
     @Override
     public void onDetach() {
         mView = null;
-    }
-    //create Constructor to get reference of api interface object
-    public HomeSenderNamesPresenter(Context context){
-        ((DaggerApplication)context).getAppComponent().inject(this);
     }
 
 //    public void confirmPresenter(String token , List<String> messageIdsList ) {

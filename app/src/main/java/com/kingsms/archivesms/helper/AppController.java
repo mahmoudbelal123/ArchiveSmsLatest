@@ -4,23 +4,13 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
-import com.kingsms.archivesms.dagger.DaggerApplication;
 import com.kingsms.archivesms.view.HomeActivity.HomeSenderNamesActivity;
 
 public class AppController extends Application implements Application.ActivityLifecycleCallbacks {
 
 
+    private static boolean activityVisible;
     private boolean activityInForeground;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        registerActivityLifecycleCallbacks(this);
-
-    }
-
-
 
     public static boolean isActivityVisible() {
         return activityVisible;
@@ -34,7 +24,13 @@ public class AppController extends Application implements Application.ActivityLi
         activityVisible = false;
     }
 
-    private static boolean activityVisible;
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        registerActivityLifecycleCallbacks(this);
+
+    }
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {

@@ -5,7 +5,6 @@ import android.database.Cursor;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.kingsms.archivesms.local_db.MyDatabaseAdapter;
-import com.kingsms.archivesms.view.HomeActivity.HomeSenderNamesActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,24 +12,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import me.leolin.shortcutbadger.ShortcutBadger;
-
 public class handle_notification extends FirebaseMessagingService {
+
+    List<Integer> status = new ArrayList<>();
 
     private void addToStatusList(Cursor c) {
         status.add((c.getInt(1)));
 
 
     }
-    List<Integer> status = new ArrayList<>() ;
-    private  void  getStatus()
-    {
 
-        status= new ArrayList<>();
+    private void getStatus() {
+
+        status = new ArrayList<>();
         final MyDatabaseAdapter db = new MyDatabaseAdapter(this);
         db.open();
         Cursor c = db.getAllUnread();
-        if(c != null)
+        if (c != null)
             if (c.moveToNext()) {
                 //senderNames = new ArrayList<>();
                 do {
@@ -38,11 +36,12 @@ public class handle_notification extends FirebaseMessagingService {
                 } while (c.moveToNext());
             }
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
 
-       // getStatus();
+        // getStatus();
         //if(status != null)
         //ShortcutBadger.applyCount(handle_notification.this,status.size() );
 
@@ -52,7 +51,7 @@ public class handle_notification extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         if (remoteMessage.getData().size() > 0) {
             try {
-                Map<String , String> map =  remoteMessage.getData();
+                Map<String, String> map = remoteMessage.getData();
                 sendPushNotification(map);
 
 
@@ -69,6 +68,7 @@ public class handle_notification extends FirebaseMessagingService {
         }
 
     }
+
     @Override
     public void onNewToken(String token) {
     }
@@ -84,9 +84,9 @@ public class handle_notification extends FirebaseMessagingService {
         MyNotificationManager mNotificationManager = new MyNotificationManager(getBaseContext());
         Date currentTime = Calendar.getInstance().getTime();
 
-        if(time == null)
-             time = currentTime.toString();
-        mNotificationManager.showNewNotification(notificationId ,time ,sender_name ,  title , content);
+        if (time == null)
+            time = currentTime.toString();
+        mNotificationManager.showNewNotification(notificationId, time, sender_name, title, content);
 
 
     }

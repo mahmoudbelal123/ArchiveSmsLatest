@@ -6,6 +6,7 @@
     <string name="mobile_number_is_empty">رقم الهاتف غير صحيح</string>
     <string name="login">الدخول</string>
     <string name="enter_code">أدخل كود التفعيل</string>
+    <string name="enter_valid_code">أدخل كود التفعيل الصحيح</string>
     <string name="send_code">أرسل الكود</string>
     <string name="invalid_code">كود التفعيل غير صحيح. من فضلك حاول مرة أخري</string>
     <string name="Unread_Messages">الرسائل غير المقروءة</string>
@@ -13,11 +14,33 @@
     <string name="notifications">الاشعارات</string>
     <string name="Message_is_Copied">تم نسخ الرسالة بنجاح</string>
     <string name="there_is"> يوجد </string>
-    <string name="new_messages" > رسائل جديدة </string>
+    <string name="new_messages"> رسائل جديدة </string>
     <string name="confirm_delete">سيتم حذف هذه الرسالة </string>
     <string name="cancel">الغاء</string>
     <string name="yes">نعم</string>
     <string name="no">لا</string>
     <string name="check_internet">من فضلك تأكد من الاتصال بالانترنت </string>
+    <string name="my_profile">الإعدادات</string>
+    <string name="log_out">تسجيل خروج</string>
+    <string name="log_out_note"> رجاء العلم: أنه بالقيام بتسجيل الخروج. سوف يلزم ذلك إعادةالتفعيل مرةأخري</string>
+    <string name="permission_denied">تم رفض الإذن</string>
+    <string name="no_messages_yet">لا يوجد رسائل حتي الآن </string>
+    <string name="splash_hint">قم بتسجيل حساب جديد و مجاني في خدمة إشعار لإستقبال رسائل غير محدودة من جهات اتصالاتكم المفضلة </string>
+    <string name="splash_button_add_new_account">إضافة حساب</string>
+    <string name="your_mobile_number">رقم الهاتف</string>
+    <string name="connected">متصل الآن </string>
+    <string name="not_connected">غير متصل الآن </string>
+    <string name="status">الحالة</string>
+
+    <string name="about">ِعن التطبيق</string>
+    <string name="about_message">هو تطبيق مجاني مرتبط بموقع رسائل الجوال  <b>Kingsms.ws</b>
+يقوم باستقبال الرسائل التي تخصكم فقط من الجهات الموثوقة : مدارس ، جهات حكومية ، مستشفيات ، أو أي جهة تعتمدها أنت في اختياراتك</string>
+
+    <string name="info">معلومات عن التطبيق</string>
+
+    <string name="app_version">نسخة رقم </string>
+    <string name="today">اليوم</string>
+    <string name="empty_inbox">لا يوجد رسائل محفوظة</string>
+
 
 </resources>

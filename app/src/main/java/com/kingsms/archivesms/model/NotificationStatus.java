@@ -2,14 +2,24 @@ package com.kingsms.archivesms.model;
 
 public class NotificationStatus {
 
-    private  String senderName;
+    private String senderName;
     private int status;
+    private long time;
 
-    public  NotificationStatus(String senderName , int status)
-    {
+    public NotificationStatus(String senderName, int status, long time) {
         this.senderName = senderName;
         this.status = status;
+        this.time = time;
     }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
     public String getSenderName() {
         return senderName;
     }

@@ -13,20 +13,22 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 
-
 // this class created for register who need inject
 @Singleton
-@Component(modules = {AppModule.class, NetworkModule.class,PresenterModule.class})
+@Component(modules = {AppModule.class, NetworkModule.class, PresenterModule.class})
 public interface AppComponent {
 
 
     void inject(LoginActivity loginActivity);
+
     void inject(LoginPresenter loginPresenter);
 
     void inject(HomeSenderNamesActivity homeSenderNamesActivity);
+
     void inject(HomeSenderNamesPresenter homeSenderNamesPresenter);
 
     void inject(ActivationCodeActivity activationCodeActivity);
+
     void inject(ActivationCodePresenter activationCodePresenter);
 
 }

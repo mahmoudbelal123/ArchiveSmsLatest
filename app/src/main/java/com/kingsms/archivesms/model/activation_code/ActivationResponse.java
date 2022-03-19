@@ -9,6 +9,10 @@ public class ActivationResponse {
 
     @SerializedName("token_type")
     private String token_type;
+    @SerializedName("code")
+    private int code;
+    @SerializedName("phone")
+    private String phone;
 
     public String getAccess_token() {
         return access_token;
@@ -34,7 +38,12 @@ public class ActivationResponse {
         this.code = code;
     }
 
-    @SerializedName("code")
-    private int code;
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
 }

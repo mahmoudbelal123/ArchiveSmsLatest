@@ -5,7 +5,10 @@ import com.google.gson.annotations.SerializedName;
 public class ActivationRequest {
     @SerializedName("phone")
     private String phone;
-
+    @SerializedName("firebase_token")
+    private String firebase_token;
+    @SerializedName("code")
+    private String code;
 
     public String getFirebase_token() {
         return firebase_token;
@@ -15,10 +18,6 @@ public class ActivationRequest {
         this.firebase_token = firebase_token;
     }
 
-    @SerializedName("firebase_token")
-    private String firebase_token;
-
-
     public String getCode() {
         return code;
     }
@@ -26,9 +25,6 @@ public class ActivationRequest {
     public void setCode(String code) {
         this.code = code;
     }
-
-    @SerializedName("code")
-    private String code;
 
     public String getPhone() {
         return phone;

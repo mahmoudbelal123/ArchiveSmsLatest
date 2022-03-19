@@ -10,8 +10,6 @@ import com.kingsms.archivesms.dagger.DaggerApplication;
 import com.kingsms.archivesms.helper.Utilities;
 import com.kingsms.archivesms.model.activation_code.ActivationRequest;
 import com.kingsms.archivesms.model.activation_code.ActivationResponse;
-import com.kingsms.archivesms.model.login.LoginRequest;
-import com.kingsms.archivesms.model.login.LoginResponse2;
 
 import javax.inject.Inject;
 
@@ -29,6 +27,10 @@ public class ActivationCodePresenter implements BasePresenter<ActivationCodeView
     ActivationRequest activationRequest;
 
 
+    //create Constructor to get reference of api interface object
+    public ActivationCodePresenter(Context context) {
+        ((DaggerApplication) context).getAppComponent().inject(this);
+    }
 
     @Override
     public void onAttach(ActivationCodeView view) {
@@ -37,34 +39,23 @@ public class ActivationCodePresenter implements BasePresenter<ActivationCodeView
 
     }
 
-
-
     @Override
     public void onDetach() {
         mView = null;
     }
-    //create Constructor to get reference of api interface object
-    public ActivationCodePresenter(Context context){
-        ((DaggerApplication)context).getAppComponent().inject(this);
-    }
 
     //this function created to load items from specific endpoint
-    public void activatePresenter(String firebaseToken , String code  ,String phone ) {
+    public void activatePresenter(String firebaseToken, String code, String phone) {
 
         try {
-            if (!Utilities.checkConnection(mContext)) {
+            if (!Utilities.checkConnection()) {
                 mView.showErrorMessage(mContext.getString(R.string.check_internet));
                 return;
-            }
-
-
-            else if (phone.equals("")) {
+            } else if (phone.equals("")) {
                 mView.showPhoneError();
                 return;
 
-            }
-
-            else {
+            } else {
                 mView.showLoading();
 
                 activationRequest = new ActivationRequest();
@@ -86,7 +77,7 @@ public class ActivationCodePresenter implements BasePresenter<ActivationCodeView
                             public final void onError(Throwable e) {
 
 
-                                Toast.makeText(mContext, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                 mView.hideLoading();
 
 
@@ -94,9 +85,9 @@ public class ActivationCodePresenter implements BasePresenter<ActivationCodeView
 
                             @Override
                             public final void onNext(ActivationResponse response) {
-                               mView.hideLoading();
+                                mView.hideLoading();
                                 mView.showSuccessMessage(response);
-                                Utilities.saveUserInfo(mContext , response);
+                                Utilities.saveUserInfo(mContext, response);
 
                             }
                         });
@@ -104,22 +95,12 @@ public class ActivationCodePresenter implements BasePresenter<ActivationCodeView
 
             }
 
-        }catch (Exception e)
-        {
-            mView.showErrorMessage("error \n"+e.getMessage());
+        } catch (Exception e) {
+            mView.showErrorMessage("error \n" + e.getMessage());
 
         }
 
     }
-
-
-
-
-
-
-
-
-
 
 
 }

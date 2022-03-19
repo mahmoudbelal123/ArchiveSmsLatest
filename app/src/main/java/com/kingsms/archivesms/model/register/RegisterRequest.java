@@ -5,13 +5,13 @@ import com.google.gson.annotations.SerializedName;
 public class RegisterRequest {
 
     @SerializedName("full_name")
-    private  String full_name ;
+    private String full_name;
 
     @SerializedName("password")
-    private  String password ;
+    private String password;
 
     @SerializedName("phone")
-    private  String phone ;
+    private String phone;
 
     public String getFull_name() {
         return full_name;
@@ -36,7 +36,6 @@ public class RegisterRequest {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
 
 
 }

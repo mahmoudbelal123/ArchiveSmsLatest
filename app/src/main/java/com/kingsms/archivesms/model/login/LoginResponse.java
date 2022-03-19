@@ -10,6 +10,10 @@ public class LoginResponse {
 
     @SerializedName("token_type")
     private String token_type;
+    @SerializedName("full_name")
+    private String full_name;
+    @SerializedName("code")
+    private int code;
 
     public String getAccess_token() {
         return access_token;
@@ -42,12 +46,6 @@ public class LoginResponse {
     public void setCode(int code) {
         this.code = code;
     }
-
-    @SerializedName("full_name")
-    private String full_name;
-
-    @SerializedName("code")
-    private int code;
 
 
 }

@@ -12,9 +12,11 @@ public interface ActivationCodeView extends BaseView {
     void hideLoading();
 
     void showErrorMessage(String message);
+
     void showSuccessMessage(ActivationResponse response);
 
     void showPasswordError();
+
     void showPhoneError();
 
 

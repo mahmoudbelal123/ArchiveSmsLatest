@@ -1,34 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_margin="6dp"
-    tools:context=".view.HomeActivity.HomeSenderNamesActivity">
+    android:fitsSystemWindows="true"
+    android:layoutDirection="locale"
+    android:textDirection="locale">
+
+    <ImageView
+        android:id="@+id/image_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_empty_inbox"
+        android:visibility="gone" />
 
     <ProgressBar
-        android:visibility="gone"
         android:id="@+id/progress_getNotifications"
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <android.support.v7.widget.RecyclerView
-        app:reverseLayout="true"
-        app:stackFromEnd="true"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+
+    <TextView
+        android:id="@+id/text_not_found"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:text="@string/no_messages_yet"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle_sender_names"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:reverseLayout="true"
+        app:stackFromEnd="true"
 
         />
-
-    <TextView
-        android:visibility="gone"
-        android:gravity="center"
-        android:text="No Messages yet . . . "
-        android:id="@+id/text_not_found"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 
 </FrameLayout>

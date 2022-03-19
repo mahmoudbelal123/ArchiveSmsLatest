@@ -12,7 +12,6 @@ import dagger.Module;
 import dagger.Provides;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -41,12 +40,11 @@ public class NetworkModule {
     }
 
 
-
     // this an Interceptor for adding  headers and standard params of requests
 
     @Provides
     @Singleton
-    OkHttpClient provideOkHTTp(Interceptor interceptor){
+    OkHttpClient provideOkHTTp(Interceptor interceptor) {
         return new OkHttpClient.Builder()
                 .addInterceptor(interceptor)
                 .connectTimeout(100, TimeUnit.SECONDS)
@@ -55,7 +53,7 @@ public class NetworkModule {
                 .build();
     }
 
-   //creating singleton retrofit object
+    //creating singleton retrofit object
     @Provides
     @Singleton
     Retrofit provideRetrofit(@Named(NAME_BASE_URL) String baseUrl, Converter.Factory converter) {
@@ -74,9 +72,6 @@ public class NetworkModule {
     ApiInterface provideUsdaApi(Retrofit retrofit) {
         return retrofit.create(ApiInterface.class);
     }
-
-
-
 
 
 }

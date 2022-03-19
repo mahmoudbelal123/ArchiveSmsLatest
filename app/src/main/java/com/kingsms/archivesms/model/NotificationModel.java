@@ -2,8 +2,8 @@ package com.kingsms.archivesms.model;
 
 public class NotificationModel {
 
-    private  String notificationId;
-    private  String senderName;
+    private String notificationId;
+    private String senderName;
     private String time;
     private String title;
     private String content;

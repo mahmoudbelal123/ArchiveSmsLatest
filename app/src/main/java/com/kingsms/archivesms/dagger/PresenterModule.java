@@ -13,12 +13,10 @@ import dagger.Module;
 import dagger.Provides;
 
 
-
 //this class created to put  providers for Presenters
 
 @Module
 public class PresenterModule {
-
 
 
     @Provides
@@ -27,6 +25,7 @@ public class PresenterModule {
 
         return new LoginPresenter(context);
     }
+
     @Provides
     @Singleton
     HomeSenderNamesPresenter provideHomePresenter(Context context) {

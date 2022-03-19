@@ -3,22 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.kingsms.archivesms">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
     <application
         android:name=".dagger.DaggerApplication"
         android:allowBackup="true"
-        android:icon="@drawable/sms_logo"
+        android:debuggable="false"
+        android:icon="@drawable/app_logo"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/sms_logo"
+        android:roundIcon="@drawable/app_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
-        <activity android:name=".view.activation_code.ActivationCodeActivity"></activity>
+        android:usesCleartextTraffic="true"
+        tools:ignore="HardcodedDebugMode">
+
+        <activity
+            android:name=".view.my_profile.MyProfile"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".view.activation_code.ActivationCodeActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".view.HomeActivity.HomeSenderNamesActivity" />
         <activity android:name=".view.HomeActivity.HomeSenderDetailsNotificationsActivity" />
         <activity android:name=".view.SplashActivity">
@@ -28,8 +30,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.login.LoginActivity" />
-        <activity android:name=".view.register.RegisterActivity" />
+        <activity
+            android:name=".view.login.LoginActivity"
+            android:launchMode="singleTask" />
+
+        <receiver android:name=".helper.ConnectivityReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
 
         <service
             android:name=".handle_notification"
@@ -39,5 +48,15 @@
             </intent-filter>
         </service>
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
 </manifest>

@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">My Notifications</string>
     <string name="enter_mobile_number">Enter Mobile Number</string>
+    <string name="your_mobile_number">Mobile Number</string>
+    <string name="status">Status</string>
     <string name="mobile_number_is_empty">Mobile Number is Empty</string>
     <string name="login">Login</string>
-    <string name="enter_code">Enter Code</string>
+    <string name="enter_code">Enter code</string>
+    <string name="enter_valid_code">Enter valid code</string>
     <string name="send_code">Send Code</string>
     <string name="invalid_code">Invalid Activation Code, Try again</string>
     <string name="Unread_Messages">Unread Messages</string>
@@ -11,11 +14,29 @@
     <string name="notifications">notifications</string>
     <string name="Message_is_Copied">Message is Copied</string>
     <string name="there_is"> There is </string>
-    <string name="new_messages" > New Messages </string>
+    <string name="new_messages"> New Messages </string>
     <string name="confirm_delete">Are you sure to delete this message ?</string>
     <string name="cancel">Cancel</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="log_out">LogOut</string>
+    <string name="my_profile">Settings</string>
     <string name="check_internet">No Internet Connection!</string>
+    <string name="log_out_note">Logout from your account, will need new activation code </string>
+    <string name="permission_denied">Permission Denied </string>
+    <string name="no_messages_yet">No Messages yet</string>
+    <string name="splash_hint">Register a new, free account with a notification service to receive unlimited messages from your favorite contacts</string>
+    <string name="splash_button_add_new_account">Add Account</string>
+    <string name="connected">Connected</string>
+    <string name="not_connected">not Connected</string>
+    <string name="about">ِAbout Application</string>
+    <string name="about_message">It is a free application linked to the mobile message site
+It receives messages that belong to you only from trusted authorities: schools, government agencies, hospitals, or any body that you choose in your choicesِ</string>
+
+    <string name="info">Info</string>
+    <string name="app_version">Application Version </string>
+    <string name="today">Toady</string>
+    <string name="empty_inbox">Inbox is empty</string>
+
 
 </resources>

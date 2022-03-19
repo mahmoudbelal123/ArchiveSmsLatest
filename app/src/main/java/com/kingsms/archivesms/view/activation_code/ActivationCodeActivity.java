@@ -1,10 +1,10 @@
 package com.kingsms.archivesms.view.activation_code;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
+import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -13,23 +13,31 @@ import android.widget.Toast;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.kingsms.archivesms.R;
 import com.kingsms.archivesms.dagger.DaggerApplication;
+import com.kingsms.archivesms.helper.Constants;
+import com.kingsms.archivesms.helper.Utilities;
 import com.kingsms.archivesms.model.activation_code.ActivationResponse;
 import com.kingsms.archivesms.view.HomeActivity.HomeSenderNamesActivity;
 
 import javax.inject.Inject;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 public class ActivationCodeActivity extends AppCompatActivity implements ActivationCodeView {
 
+    @Inject
+    ActivationCodePresenter activationCodePresenter;
+    String phone = "";
     private EditText activationCodeEdit;
     private Button sendCodeBtn;
     private ProgressBar progressBarActivate;
 
-    @Inject
-    ActivationCodePresenter activationCodePresenter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
         setContentView(R.layout.activity_activation_code);
 
 
@@ -40,27 +48,33 @@ public class ActivationCodeActivity extends AppCompatActivity implements Activat
         ((DaggerApplication) getApplication()).getAppComponent().inject(this);
         activationCodePresenter.onAttach(this);
 
+        phone = Utilities.getPhoneActivatedCode(this);
 
         sendCodeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            activateLogic();
+                activateLogic();
             }
         });
     }
 
 
-    private void activateLogic(){
+    private void activateLogic() {
         String newToken = FirebaseInstanceId.getInstance().getToken();
-        if(activationCodeEdit.getText().length() == 0)
-        {
-         activationCodeEdit.setError(getString(R.string.enter_code));
+        if (activationCodeEdit.getText() == null || TextUtils.isEmpty(activationCodeEdit.getText())) {
+            activationCodeEdit.setError(getString(R.string.enter_code));
+            return;
         }
-        else {
-            activationCodePresenter.activatePresenter(newToken, activationCodeEdit.getText().toString(), getIntent().getStringExtra("phone"));
+        if (activationCodeEdit.getText().length() != 6) {
+            Utilities.setActivatedCode(this, Constants.SENT_ACTIVATION_CODE_BUT_NOT_ENTERED_CASE, phone);
+            activationCodeEdit.setError(getString(R.string.enter_valid_code));
+        } else {
+
+            activationCodePresenter.activatePresenter(newToken, activationCodeEdit.getText().toString(), phone);
         }
 
-        }
+    }
+
     @Override
     public void showLoading() {
 
@@ -75,21 +89,23 @@ public class ActivationCodeActivity extends AppCompatActivity implements Activat
 
     @Override
     public void showErrorMessage(String message) {
-
-        Toast.makeText(this, ""+message, Toast.LENGTH_SHORT).show();
+        Utilities.setActivatedCode(this, Constants.SENT_ACTIVATION_CODE_BUT_ACTIVATION_FAILED, phone);
+        Toast.makeText(this, "" + message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void showSuccessMessage(ActivationResponse response) {
 
-      //  Toast.makeText(this, ""+response, Toast.LENGTH_SHORT).show();
+        if (response.getCode() == 200) {
+            Utilities.setActivatedCode(this, Constants.ACTIVATED_CASE, phone);
+            Intent intent = new Intent(this, HomeSenderNamesActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
 
-        if(response.getCode() == 200)
-            startActivity(new Intent(this , HomeSenderNamesActivity.class));
-        else
-        {
-            Toast.makeText(this, ""+getString(R.string.invalid_code), Toast.LENGTH_LONG).show();
-            Toast.makeText(this, ""+getString(R.string.invalid_code), Toast.LENGTH_LONG).show();
+        } else {
+            Utilities.setActivatedCode(this, Constants.SENT_ACTIVATION_CODE_BUT_ACTIVATION_FAILED, phone);
+            Toast.makeText(this, "" + getString(R.string.invalid_code), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "" + getString(R.string.invalid_code), Toast.LENGTH_LONG).show();
 
         }
 
@@ -103,7 +119,7 @@ public class ActivationCodeActivity extends AppCompatActivity implements Activat
     @Override
     public void showPhoneError() {
 
-        Toast.makeText(this, ""+getString(R.string.mobile_number_is_empty), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "" + getString(R.string.mobile_number_is_empty), Toast.LENGTH_SHORT).show();
     }
 
     @Override
