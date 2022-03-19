@@ -72,8 +72,8 @@ public class SenderNamesAdapter extends RecyclerView.Adapter<SenderNamesAdapter.
             if (notificationModelList != null && !notificationModelList.isEmpty() && notificationModelList.get(0).getContent() != null) {
                 String completeLatestMessage = notificationModelList.get(notificationModelList.size() - 1).getContent();
                 String subLatestMessage;
-                if (completeLatestMessage != null && completeLatestMessage.length() > 20) {
-                    subLatestMessage = completeLatestMessage.substring(0, 20);
+                if (completeLatestMessage != null && completeLatestMessage.length() > 18) {
+                    subLatestMessage = completeLatestMessage.substring(0, 18);
                     holder.txtLatestMessage.setText(subLatestMessage + "...");
                 } else {
                     holder.txtLatestMessage.setText(completeLatestMessage);
@@ -102,13 +102,8 @@ public class SenderNamesAdapter extends RecyclerView.Adapter<SenderNamesAdapter.
             holder.imageViewMessageStatus.setBackground(mContext.getDrawable(R.drawable.review));
 
         }
-       /* holder.deleteAllNotificationsImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onItemClickDeleteHomeListener.onItemClick(senderNamesList.get(position).getSenderName());
-            }
-        });
-        */
+        holder.imageDelete.setOnClickListener(v -> onItemClickDeleteHomeListener.onItemClick(senderNamesList.get(position).getSenderName()));
+
 
     }
 
@@ -178,7 +173,7 @@ public class SenderNamesAdapter extends RecyclerView.Adapter<SenderNamesAdapter.
         public TextView txtSenderName, text_unread_messages, txtTime;
         public TextView txtLatestMessage;
         public LinearLayout linear_container;
-        public ImageView imageViewMessageStatus;
+        public ImageView imageViewMessageStatus,imageDelete;
 
         public MyViewHolder(View view) {
             super(view);
@@ -188,6 +183,7 @@ public class SenderNamesAdapter extends RecyclerView.Adapter<SenderNamesAdapter.
             txtLatestMessage = (TextView) view.findViewById(R.id.text_latest_message);
             linear_container = (LinearLayout) view.findViewById(R.id.linear_container);
             imageViewMessageStatus = view.findViewById(R.id.imageView_sender_name_item);
+            imageDelete = view.findViewById(R.id.image_delete_one_message);
 
 
         }

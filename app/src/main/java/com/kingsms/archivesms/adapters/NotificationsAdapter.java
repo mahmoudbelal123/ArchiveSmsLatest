@@ -57,7 +57,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         if(notificationList.get(position).getContent() != null) {
             String message = notificationList.get(position).getContent();
             startAndEndIndex = getLinkFromMessage(message);
-            if(startAndEndIndex[0].equals(startAndEndIndex[1]) && TextUtils.isEmpty(startAndEndIndex[3])) {
+            if(startAndEndIndex[0].equals(startAndEndIndex[1]) && TextUtils.isEmpty(startAndEndIndex[2])) {
                 holder.txtNotificationDetails.setText(message);
             }else {
                 SpannableString spannableString = new SpannableString(message);

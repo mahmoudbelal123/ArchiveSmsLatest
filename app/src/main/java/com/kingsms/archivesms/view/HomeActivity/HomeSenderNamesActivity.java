@@ -157,7 +157,7 @@ public class HomeSenderNamesActivity extends AppCompatActivity {
                 if (response.code() == 200) {
                     for (int i = 0; i < response.body().getNot_send_messages().size(); i++) {
                         saveNotificationToLocalDatabase("" + response.body().getNot_send_messages().get(i).getNotification_id(),
-                                response.body().getNot_send_messages().get(i).getTime().getDate()
+                                response.body().getNot_send_messages().get(i).getTime()
                                 , response.body().getNot_send_messages().get(i).getSender_name(),
                                 response.body().getNot_send_messages().get(i).getTitle()
                                 , response.body().getNot_send_messages().get(i).getContent(), true);
@@ -380,7 +380,7 @@ public class HomeSenderNamesActivity extends AppCompatActivity {
                 if (response.code() == 200) {
                     for (int i = 0; i < response.body().getNot_send_messages().size(); i++) {
                         saveNotificationToLocalDatabase("" + response.body().getNot_send_messages().get(i).getNotification_id(),
-                                response.body().getNot_send_messages().get(i).getTime().getDate()
+                                response.body().getNot_send_messages().get(i).getTime()
                                 , response.body().getNot_send_messages().get(i).getSender_name(),
                                 response.body().getNot_send_messages().get(i).getTitle()
                                 , response.body().getNot_send_messages().get(i).getContent(), false);

@@ -8,10 +8,8 @@ public class ConfirmMessageDeliveryResponse {
 
     @SerializedName("not_send_messages")
     private List<Messages> not_send_messages;
-
     @SerializedName("code")
     private int code;
-
     @SerializedName("is_failed")
     private boolean isFailed;
     @SerializedName("status")
@@ -90,7 +88,7 @@ public class ConfirmMessageDeliveryResponse {
         private String title;
 
         @SerializedName("time")
-        private TimeObject time;
+        private String time;
         @SerializedName("sender_name")
         private String sender_name;
         @SerializedName("content")
@@ -98,11 +96,11 @@ public class ConfirmMessageDeliveryResponse {
         @SerializedName("notification_id")
         private int notification_id;
 
-        public TimeObject getTime() {
+        public String getTime() {
             return time;
         }
 
-        public void setTime(TimeObject time) {
+        public void setTime(String time) {
             this.time = time;
         }
 
