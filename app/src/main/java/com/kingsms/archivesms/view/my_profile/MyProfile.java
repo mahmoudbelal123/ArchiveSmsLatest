@@ -8,11 +8,18 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kingsms.archivesms.BuildConfig;
 import com.kingsms.archivesms.R;
+import com.kingsms.archivesms.apiClient.ApiClient;
+import com.kingsms.archivesms.apiClient.ApiInterface;
 import com.kingsms.archivesms.helper.Utilities;
+import com.kingsms.archivesms.model.activation_code.ActivationResponse;
+import com.kingsms.archivesms.model.confirm_message_delivery.ConfirmMessageDeliveryResponse;
+import com.kingsms.archivesms.model.logout.LogoutResponse;
 import com.kingsms.archivesms.view.HomeActivity.HomeSenderNamesActivity;
 import com.kingsms.archivesms.view.login.LoginActivity;
 import com.treebo.internetavailabilitychecker.InternetAvailabilityChecker;
@@ -20,6 +27,9 @@ import com.treebo.internetavailabilitychecker.InternetConnectivityListener;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MyProfile extends AppCompatActivity implements InternetConnectivityListener {
 
@@ -27,6 +37,7 @@ public class MyProfile extends AppCompatActivity implements InternetConnectivity
     private Button logoutBtn;
     private TextView connectedTxt;
     private TextView txtVersion;
+    private ProgressBar progressBar;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -37,6 +48,7 @@ public class MyProfile extends AppCompatActivity implements InternetConnectivity
         logoutBtn = findViewById(R.id.button_log_out);
         connectedTxt = findViewById(R.id.text_connected);
         txtVersion = findViewById(R.id.text_version);
+        progressBar = findViewById(R.id.progress_logout);
 
         txtVersion.setText(getString(R.string.app_version) + " " + BuildConfig.VERSION_NAME);
 
@@ -117,14 +129,7 @@ public class MyProfile extends AppCompatActivity implements InternetConnectivity
         alertDialog.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                Utilities.clearUserInfo(MyProfile.this);
-                Utilities.clearAllUserInfo(MyProfile.this);
-
-                Intent intent = new Intent(MyProfile.this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                MyProfile.this.finish();
+                logout();
 
             }
         });
@@ -138,6 +143,38 @@ public class MyProfile extends AppCompatActivity implements InternetConnectivity
 
     }
 
+    private  void logout(){
+        progressBar.setVisibility(View.VISIBLE);
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        ActivationResponse activationResponse = Utilities.retrieveUserInfo(this);
+        String token = "Bearer " + activationResponse.getAccess_token();
+        Call<LogoutResponse> call1 = apiInterface.logout(token);
+        call1.enqueue(new Callback<LogoutResponse>() {
+            @Override
+            public void onResponse(Call<LogoutResponse> call, Response<LogoutResponse> response) {
+                progressBar.setVisibility(View.INVISIBLE);
+                if(response.code() == 200){
+                    Utilities.clearUserInfo(MyProfile.this);
+                    Utilities.clearAllUserInfo(MyProfile.this);
+                    Toast.makeText(MyProfile.this, ""+response.message(), Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(MyProfile.this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    MyProfile.this.finish();
+                }else{
+                    Toast.makeText(MyProfile.this, ""+response.message(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LogoutResponse> call, Throwable t) {
+                progressBar.setVisibility(View.INVISIBLE);
+                Toast.makeText(MyProfile.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
     @Override
     public void onInternetConnectivityChanged(boolean isConnected) {
 

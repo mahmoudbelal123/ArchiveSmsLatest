@@ -9,6 +9,7 @@ public class EndPoints {
     public static final String VERIFY = "auth/verify_phone";
     public static final String LOGIN = "auth/signup";
     public static final String CONFIRM_MESSAGE_DELIVERY = "confirm_message_delivery";
+    public static final String LOGOUT = "auth/logout";
 
 
 }

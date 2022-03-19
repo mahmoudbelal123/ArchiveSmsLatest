@@ -204,7 +204,14 @@
             android:text="@string/app_version"
             android:textColor="@color/colorPrimary"
             android:textSize="18sp" />
-
+        <ProgressBar
+            android:id="@+id/progress_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            />
 
         <Button
             android:id="@+id/button_log_out"
@@ -213,7 +220,7 @@
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="5dp"
             android:background="@drawable/button_border"
             android:text="@string/log_out"
             android:textColor="@color/colorWhite" />
