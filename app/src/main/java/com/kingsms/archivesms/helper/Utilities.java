@@ -12,19 +12,19 @@ import java.util.Locale;
 public class Utilities {
 
 
-    public static SharedPreferences sharedPreferences;
-    public static String SharedPreferencesName = "user_info";
-    public static String SharedPreferences_token_key = "token";
+    public static SharedPreferences sharedPreference;
+    public static String SharedPreferencesName = "user_info_";
+    public static String SharedPreferences_token_key = "token_";
 
 
-    public static String SharedPreferencesActivationCodeName = "activation_code";
-    public static String SharedPreferences_is_activated_key = "isActivated";
-    public static String SharedPreferences_is_activated_phone_key = "phone";
+    public static String SharedPreferencesActivationCodeName = "activation_code_";
+    public static String SharedPreferences_is_activated_key = "isActivated_";
+    public static String SharedPreferences_is_activated_phone_key = "phone_";
 
 
     public static void setActivatedCode(Context context, int activationStatus, String phone) {
-        sharedPreferences = context.getSharedPreferences(SharedPreferencesActivationCodeName, 0);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        sharedPreference = context.getSharedPreferences(SharedPreferencesActivationCodeName, 0);
+        SharedPreferences.Editor editor = sharedPreference.edit();
         editor.putInt(SharedPreferences_is_activated_key, activationStatus);
         editor.putString(SharedPreferences_is_activated_phone_key, phone);
         editor.commit();
@@ -32,20 +32,20 @@ public class Utilities {
     }
 
     public static int getActivatedCode(Context context) {
-        sharedPreferences = context.getSharedPreferences(SharedPreferencesActivationCodeName, 0);
-        int activationStatus = sharedPreferences.getInt(SharedPreferences_is_activated_key, 0);
+        sharedPreference = context.getSharedPreferences(SharedPreferencesActivationCodeName, 0);
+        int activationStatus = sharedPreference.getInt(SharedPreferences_is_activated_key, 0);
         return activationStatus;
     }
 
     public static String getPhoneActivatedCode(Context context) {
-        sharedPreferences = context.getSharedPreferences(SharedPreferencesActivationCodeName, 0);
-        String phone = sharedPreferences.getString(SharedPreferences_is_activated_phone_key, "");
+        sharedPreference = context.getSharedPreferences(SharedPreferencesActivationCodeName, 0);
+        String phone = sharedPreference.getString(SharedPreferences_is_activated_phone_key, "");
         return phone;
     }
 
     public static void saveUserInfo(Context context, ActivationResponse activationResponse) {
-        sharedPreferences = context.getSharedPreferences(SharedPreferencesName, 0);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        sharedPreference = context.getSharedPreferences(SharedPreferencesName, 0);
+        SharedPreferences.Editor editor = sharedPreference.edit();
         Gson gson = new Gson();
         String json = gson.toJson(activationResponse);
         editor.putString(SharedPreferences_token_key, json);
@@ -54,16 +54,16 @@ public class Utilities {
     }
 
     public static void clearUserInfo(Context context) {
-        sharedPreferences = context.getSharedPreferences(SharedPreferencesName, 0);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        sharedPreference = context.getSharedPreferences(SharedPreferencesName, 0);
+        SharedPreferences.Editor editor = sharedPreference.edit();
         editor.clear();
         editor.commit();
 
     }
 
     public static void clearAllUserInfo(Context context) {
-        sharedPreferences = context.getSharedPreferences(SharedPreferencesActivationCodeName, 0);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        sharedPreference = context.getSharedPreferences(SharedPreferencesActivationCodeName, 0);
+        SharedPreferences.Editor editor = sharedPreference.edit();
         editor.clear();
         editor.commit();
 
@@ -71,9 +71,9 @@ public class Utilities {
 
 
     public static ActivationResponse retrieveUserInfo(Context context) {
-        sharedPreferences = context.getSharedPreferences(SharedPreferencesName, 0);
+        sharedPreference = context.getSharedPreferences(SharedPreferencesName, 0);
         Gson gson = new Gson();
-        String json = sharedPreferences.getString(SharedPreferences_token_key, null);
+        String json = sharedPreference.getString(SharedPreferences_token_key, null);
         ActivationResponse obj = gson.fromJson(json, ActivationResponse.class);
 
         return obj;

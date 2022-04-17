@@ -21,6 +21,7 @@ import com.kingsms.archivesms.helper.OnItemClickListener;
 import com.kingsms.archivesms.helper.Utilities;
 import com.kingsms.archivesms.local_db.MyDatabaseAdapter;
 import com.kingsms.archivesms.model.MapNotificationStatus;
+import com.kingsms.archivesms.model.NotificationModel;
 import com.kingsms.archivesms.model.NotificationStatus;
 import com.kingsms.archivesms.model.activation_code.ActivationResponse;
 import com.kingsms.archivesms.model.confirm_message_delivery.ConfirmMessageDeliveryResponse;
@@ -55,6 +56,9 @@ public class HomeSenderNamesActivity extends AppCompatActivity {
     List<Integer> status = new ArrayList<>();
     List<String> contactsList = new ArrayList<>();
     List<Integer> listIds = new ArrayList<>();
+    List<NotificationModel> notificationModelList;
+    NotificationModel notificationModel;
+    int counter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -259,6 +263,7 @@ public class HomeSenderNamesActivity extends AppCompatActivity {
     }
 
     public void getAllSenderNamesOfNotification() {
+        counter = 0;
         senderNames = new ArrayList<>();
         final MyDatabaseAdapter db = new MyDatabaseAdapter(this);
         db.open();
@@ -281,8 +286,8 @@ public class HomeSenderNamesActivity extends AppCompatActivity {
 
         }
         if (senderNames != null) {
-
-
+             getFinalSenderNames(senderNames);
+             if(senderNames == null) return;
             senderNamesAdapter = new SenderNamesAdapter(senderNames, this, new OnItemClickListener() {
                 @Override
                 public void onItemClick(String item, int position) {
@@ -325,6 +330,45 @@ public class HomeSenderNamesActivity extends AppCompatActivity {
 
 
     }
+
+    private void getFinalSenderNames(List<NotificationStatus> senderNames) {
+        for (int i = 0 ; i < senderNames.size(); i++){
+            getAllNotificationsOfSenderName(senderNames.get(i).getSenderName());
+            if(notificationModelList.size() == 0){
+                deleteAllSenderNames(senderNames.get(i).getSenderName());
+                counter = 1;
+            }
+        }
+        if(counter == 1)
+        getAllSenderNamesOfNotification();
+    }
+
+    private void getAllNotificationsOfSenderName(String senderName) {
+        notificationModelList = new ArrayList<>();
+
+        MyDatabaseAdapter db = new MyDatabaseAdapter(this);
+        db.open();
+        Cursor c = db.getNotificationsBySenderName(senderName);
+
+        if (c.moveToNext()) {
+            do {
+                addToNotificationList(c);
+            } while (c.moveToNext());
+
+        }
+    }
+
+    private void addToNotificationList(Cursor c) {
+
+        notificationModel = new NotificationModel();
+
+        notificationModel.setTitle(c.getString(1));
+        notificationModel.setTime(c.getString(2));
+        notificationModel.setContent(c.getString(3));
+        notificationModel.setNotificationId(c.getString(4));
+        notificationModelList.add(notificationModel);
+    }
+
 
     private void deleteAllSenderNames(String senderName) {
         MyDatabaseAdapter myDatabaseAdapter = new MyDatabaseAdapter(this);

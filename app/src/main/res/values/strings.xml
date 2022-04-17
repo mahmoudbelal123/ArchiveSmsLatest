@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">My Notifications</string>
     <string name="enter_mobile_number">Enter Mobile Number</string>
+    <string name="enter_valid_mobile">Enter Valid Mobile Number</string>
     <string name="your_mobile_number">Mobile Number</string>
     <string name="status">Status</string>
     <string name="mobile_number_is_empty">Mobile Number is Empty</string>

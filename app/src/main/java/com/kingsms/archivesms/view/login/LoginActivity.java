@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView, View.
     public static final int RequestPermissionCode = 1;
     private static final int REQUEST_READ_PHONE_STATE = 2020;
     String phone;
+    String phoneNumber;
     List<Contact> contactList;
     Cursor cursor;
     @Inject
@@ -179,9 +180,12 @@ public class LoginActivity extends AppCompatActivity implements LoginView, View.
 
     @Override
     public void showSuccessMessage(String message) {
-        Utilities.setActivatedCode(this, Constants.SENT_ACTIVATION_CODE_BUT_NOT_ENTERED_CASE, "" + codeKsa + phone);
+        if(!TextUtils.isEmpty(editPhone.getText().toString())) {
+            phoneNumber = txtCodeKsa.getText().toString()  + validateMobileNumber(editPhone.getText().toString());
+        }
+        Utilities.setActivatedCode(this, Constants.SENT_ACTIVATION_CODE_BUT_NOT_ENTERED_CASE, "" +phoneNumber);
         Intent intent = new Intent(this, ActivationCodeActivity.class);
-        intent.putExtra("phone", txtCodeKsa.getText().toString() + editPhone.getText().toString());
+        intent.putExtra("phone", phoneNumber );
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
 
@@ -212,9 +216,13 @@ public class LoginActivity extends AppCompatActivity implements LoginView, View.
     private void loginLogic() {
         phone = editPhone.getText().toString();
         codeKsa = txtCodeKsa.getText().toString();
-        if (validateMobileNumber(phone) == null) return;
+        if (validateMobileNumber(phone) == null) {
+            editPhone.setError(getString(R.string.enter_valid_mobile));
+            return;
+        }
         String validPhone = validateMobileNumber(phone);
         String newToken = FirebaseInstanceId.getInstance().getToken();
+        phonenumber = codeKsa + validPhone;
         loginPresenter.loginPresenter(newToken, codeKsa + validPhone);
 
     }

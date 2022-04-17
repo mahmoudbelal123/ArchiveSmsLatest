@@ -52,8 +52,6 @@ public class SenderNamesAdapter extends RecyclerView.Adapter<SenderNamesAdapter.
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-
-
         holder.txtSenderName.setText(senderNamesList.get(position).getSenderName().toString());
         if (senderNamesList.get(position) != null) {
             String time = ConvertMilliSecondsToFormattedDate(String.valueOf(senderNamesList.get(position).getTime()));

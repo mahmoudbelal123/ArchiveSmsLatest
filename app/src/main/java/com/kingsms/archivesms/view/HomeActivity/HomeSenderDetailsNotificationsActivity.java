@@ -13,9 +13,15 @@ import android.widget.TextView;
 
 import com.kingsms.archivesms.R;
 import com.kingsms.archivesms.adapters.NotificationsAdapter;
+import com.kingsms.archivesms.apiClient.ApiClient;
+import com.kingsms.archivesms.apiClient.ApiInterface;
 import com.kingsms.archivesms.helper.OnItemClickListener;
+import com.kingsms.archivesms.helper.Utilities;
 import com.kingsms.archivesms.local_db.MyDatabaseAdapter;
 import com.kingsms.archivesms.model.NotificationModel;
+import com.kingsms.archivesms.model.activation_code.ActivationResponse;
+import com.kingsms.archivesms.model.confirm_message_delivery.ConfirmMessageDeliveryResponse;
+import com.kingsms.archivesms.model.confirm_message_delivery.ConfirmMessageRequest;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,12 +31,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
 
     List<NotificationModel> notificationModelList;
     NotificationModel notificationModel;
 
+    List<Integer> listIds = new ArrayList<>();
+    List<String> notificationIds;
 
     RecyclerView recyclerViewNotifications;
     NotificationsAdapter notificationsAdapter;
@@ -97,12 +108,66 @@ public class HomeSenderDetailsNotificationsActivity extends AppCompatActivity {
         if (notificationModelList.size() == 0) {
             txtNotFound.setVisibility(View.VISIBLE);
             imageEmptyInbox.setVisibility(View.VISIBLE);
+            if (getIntent().getStringExtra("sender_name") != null){
+               String senderNAme =  getIntent().getStringExtra("sender_name");
+               MyDatabaseAdapter myDatabaseAdapter = new MyDatabaseAdapter(this);
+               myDatabaseAdapter.open();
+               myDatabaseAdapter.deleteSenderName(senderNAme);
+
+            }
 
         } else {
             txtNotFound.setVisibility(View.GONE);
             imageEmptyInbox.setVisibility(View.GONE);
 
         }
+
+
+        getAllNotificationIds();
+    }
+    private void getAllNotificationIds() {
+        MyDatabaseAdapter db = new MyDatabaseAdapter(this);
+        db.open();
+        Cursor c = db.getAllNotificationIds();
+
+        if (c != null)
+            if (c.moveToFirst()) {
+                notificationIds = new ArrayList<>();
+                do {
+                    addToNotificationIdsList(c);
+                } while (c.moveToNext());
+
+
+            }
+        for (int i = 0; i < notificationIds.size(); i++) {
+            listIds.add(Integer.parseInt(notificationIds.get(i)));
+
+        }
+        if (listIds.size() != 0)
+            confirmReceivedMessages(listIds);
+    }
+    private void confirmReceivedMessages(List<Integer> listIds) {
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        ConfirmMessageRequest confirmMessageRequest = new ConfirmMessageRequest();
+        confirmMessageRequest.setConfirmed_ids(listIds);
+        ActivationResponse activationResponse = Utilities.retrieveUserInfo(this);
+        String token = "Bearer " + activationResponse.getAccess_token();
+        Call<ConfirmMessageDeliveryResponse> call1 = apiInterface.confirmMessageDelivery(token, confirmMessageRequest);
+        call1.enqueue(new Callback<ConfirmMessageDeliveryResponse>() {
+            @Override
+            public void onResponse(Call<ConfirmMessageDeliveryResponse> call, Response<ConfirmMessageDeliveryResponse> response) {
+            }
+
+            @Override
+            public void onFailure(Call<ConfirmMessageDeliveryResponse> call, Throwable t) {
+                call.cancel();
+            }
+        });
+
+
+    }
+    private void addToNotificationIdsList(Cursor c) {
+        notificationIds.add(c.getString(1));
     }
 
     @Override

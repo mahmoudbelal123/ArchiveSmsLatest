@@ -4,6 +4,8 @@
     <string name="app_name">تنبيهاتي</string>
     <string name="enter_mobile_number">من فضلك أدخل رقم الهاتف</string>
     <string name="mobile_number_is_empty">رقم الهاتف غير صحيح</string>
+    <string name="enter_valid_mobile">يوجد خطأ في رقم الهاتف</string>
+
     <string name="login">الدخول</string>
     <string name="enter_code">أدخل كود التفعيل</string>
     <string name="enter_valid_code">أدخل كود التفعيل الصحيح</string>

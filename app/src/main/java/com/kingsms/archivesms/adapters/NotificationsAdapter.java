@@ -66,6 +66,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 ClickableSpan clickableSpan = new SpaceAdjust(message) {
                     @Override
                     public void onClick(View textView) {
+                        startAndEndIndex = getLinkFromMessage(message);
+                        if(TextUtils.isEmpty(startAndEndIndex[2])) return;
                         String url = startAndEndIndex[2] ;
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(url));
@@ -79,6 +81,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 holder.txtNotificationDetails.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        startAndEndIndex = getLinkFromMessage(message);
+                        if(TextUtils.isEmpty(startAndEndIndex[2])) return;
                         String url = startAndEndIndex[2] ;
                         if(url == null || TextUtils.isEmpty(url)) return;
                         Intent i = new Intent(Intent.ACTION_VIEW);
